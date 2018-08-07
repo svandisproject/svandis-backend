@@ -1,0 +1,58 @@
+{
+  "name": "svandis-backend",
+  "version": "0.0.1",
+  "author": "Victor Wiebe",
+  "description": "Smart Contracts for the Svandis Ecosystem",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akropolisio/svandis-backend.git"
+  },
+  "scripts": {
+    "console": "truffle console"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/svandisproject/svandis-backend/issues"
+  },
+  "homepage": "https://github.com/svandisproject/svandis-backend",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.17.0",
+    "body-parser": "^1.18.2",
+    "bootstrap": "^3.3.7",
+    "copy-webpack-plugin": "^4.2.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^2.3.1",
+    "json-loader": "^0.5.7",
+    "jquery": "^3.2.1",
+    "truffle": "^4.0.4",
+    "web3": "^0.18.4",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.10.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "bip39": "^2.5.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.1",
+    "ganache-cli": "^6.0.3",
+    "mysql2": "^1.5.3",
+    "truffle-contract": "^3.0.1",
+    "truffle-hdwallet-provider": "0.0.6",
+    //"truffle-ledger-provider": "0.0.1",
+    "web3-provider-engine": "^13.8.0",
+    "zeppelin-solidity": "^1.3.0"
+  }
+}

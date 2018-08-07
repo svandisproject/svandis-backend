@@ -1,0 +1,13 @@
+# Dependency directory
+
+node_modules
+
+
+# Generated files
+
+build
+
+
+# IDE
+
+.idea
