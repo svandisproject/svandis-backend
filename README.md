@@ -5,7 +5,7 @@ Backend Blockchain Smart Contracts
 
 This project will need the latest Node.js set up on the machine. You should also have ganache installed. After cloning the project run:
 
-  `npm instal`
+  `npm install`
 
 ### Compilation
 
