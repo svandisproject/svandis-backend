@@ -23,16 +23,16 @@ contract SvandisDataFactory is TokenScreenerFactoryInterface, IcoScreenerFactory
         return true;
     }
 
-    function newTokenScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad) public onlyOwner
+    function newTokenScreener(address _owner, string _name, bytes32 _ticker, string _website, bytes _dataLoad) public onlyOwner
     returns(address newContract) {
         TokenScreenerFactoryInterface factory = TokenScreenerFactoryInterface(tokenScreenerFactoryAddress);
-        return factory.newTokenScreener(_name, _ticker, _website, _dataLoad);
+        return factory.newTokenScreener(_owner, _name, _ticker, _website, _dataLoad);
     }
 
-    function newIcoScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimestamp)
+    function newIcoScreener(address _owner, string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimestamp)
     public onlyOwner returns(address newContract) {
         IcoScreenerFactoryInterface factory = IcoScreenerFactoryInterface(icoScreenerFactoryAddress);
-        return factory.newIcoScreener(_name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
+        return factory.newIcoScreener(_owner, _name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
     }
 
 }

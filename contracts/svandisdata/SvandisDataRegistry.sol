@@ -32,7 +32,7 @@ contract SvandisDataRegistry is Ownable {
     function createNewTokenScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad)
     public onlyOwner returns (address newTokenScreener) {
         SvandisDataFactory factory = SvandisDataFactory(svandisDataFactory);
-        address tokenScreen = factory.newTokenScreener(_name, _ticker, _website, _dataLoad);
+        address tokenScreen = factory.newTokenScreener(address(this), _name, _ticker, _website, _dataLoad);
 
         tokenScreenerMapping[tokenScreen] = icoScreenerIndex.length;
         tokenScreenerIndex.push(tokenScreen);
@@ -43,7 +43,7 @@ contract SvandisDataRegistry is Ownable {
     function createNewIcoScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimestamp)
     public onlyOwner returns (address newIcoScreener) {
         SvandisDataFactory factory = SvandisDataFactory(svandisDataFactory);
-        address icoScreen = factory.newIcoScreener(_name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
+        address icoScreen = factory.newIcoScreener(address(this), _name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
         icoScreenerMapping[icoScreen] = icoScreenerIndex.length;
         icoScreenerIndex.push(icoScreen);
         emit Created(owner, icoScreen);
@@ -52,7 +52,7 @@ contract SvandisDataRegistry is Ownable {
 
     function updateSvandisData(address _svandisDataContract, bytes _newDataLoad) public onlyOwner returns (bool) {
         SvandisData sd = SvandisData(_svandisDataContract);
-        require(sd.updateData(_newDataLoad));
+        sd.updateData(_newDataLoad);
         emit Updated(owner, _svandisDataContract);
         return true;
     }

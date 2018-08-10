@@ -52,11 +52,24 @@ contract('SvandisDataFactory', function ([owner, unknown]) {
 
 
 	it('should create a token screener', async function () {
-		await svandisDataFactory.newTokenScreener(name, ticker, website, dataLoad, {from: owner}).should.be.fulfilled;
+		await svandisDataFactory.newTokenScreener(
+			svandisDataFactory.address,
+			name,
+			ticker,
+			website,
+			dataLoad,
+			{from: owner}).should.be.fulfilled;
 	});
 
 
 	it('should create an ico screener', async function () {
-		await svandisDataFactory.newIcoScreener(name, ticker, website, dataLoad, tokenGenerationEventTimestamp, {from: owner}).should.be.fulfilled;
+		await svandisDataFactory.newIcoScreener(
+			svandisDataFactory.address,
+			name,
+			ticker,
+			website,
+			dataLoad,
+			tokenGenerationEventTimestamp,
+			{from: owner}).should.be.fulfilled;
 	});
 });

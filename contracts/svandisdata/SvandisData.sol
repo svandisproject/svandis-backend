@@ -11,12 +11,13 @@ contract SvandisData is Ownable{
     uint public firstUpdated;
     uint public lastUpdated;
 
-    constructor(string _name, string _website, bytes _dataLoad) public{
+    constructor(address _owner, string _name, string _website, bytes _dataLoad) public{
         name=_name;
         website = _website;
         currentDataHash = keccak256(_dataLoad);
         firstUpdated = now;
         lastUpdated = now;
+        owner = _owner;
     }
 
     function updateData(bytes _dataLoad) public onlyOwner returns (bool){
