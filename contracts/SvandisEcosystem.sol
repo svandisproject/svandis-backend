@@ -5,27 +5,34 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
 
 contract SvandisEcosystem is Ownable{
-    address public owner;
   //  UserRegistry public userRegistry;
-    SvandisDataRegistry public svandisDataRegistry;
+    address public svandisDataRegistry;
     SvandisToken private token;
 
     constructor(address _token, address _svandisDataReg) public {
-        owner = msg.sender;
-        svandisDataRegistry = new SvandisDataRegistry(_svandisDataReg);
+        svandisDataRegistry = _svandisDataReg;
         token = SvandisToken(_token);
+        owner = msg.sender;
     }
 
+    event Created(address indexed owner, address indexed svandisDataLocation);
+
     function setSvandisDataRegistry(address _svandisDataReg) public onlyOwner returns (bool){
-        svandisDataRegistry = new SvandisDataRegistry(_svandisDataReg);
+        svandisDataRegistry = _svandisDataReg;
         return true;
     }
 
     function createNewTokenScreener (string _name, bytes32 _ticker, string _website, bytes _dataLoad) public onlyOwner returns (address){
-        return svandisDataRegistry.createNewTokenScreener(_name, _ticker, _website, _dataLoad);
+        SvandisDataRegistry registry = SvandisDataRegistry(svandisDataRegistry);
+        address tokenScreener = registry.createNewTokenScreener(_name, _ticker, _website, _dataLoad);
+        emit Created(owner, tokenScreener);
+        return tokenScreener;
     }
 
     function createNewIcoScreener (string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimeStamp) public onlyOwner returns (address){
-        return svandisDataRegistry.createNewIcoScreener(_name, _ticker, _website, _dataLoad, _tokenGenerationEventTimeStamp);
+        SvandisDataRegistry registry = SvandisDataRegistry(svandisDataRegistry);
+        address icoScreener = registry.createNewIcoScreener(_name, _ticker, _website, _dataLoad, _tokenGenerationEventTimeStamp);
+        emit Created(owner, icoScreener);
+        return icoScreener;
     }
 }

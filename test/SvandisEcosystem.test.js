@@ -4,6 +4,8 @@ const SvandisDataRegistry = artifacts.require('./SvandisDataRegistry.sol');
 const SvandisDataFactory = artifacts.require('./SvandisDataFactory.sol');
 const TokenScreenerFactory = artifacts.require('./TokenScreenerFactory.sol');
 const IcoScreenerFactory = artifacts.require('./IcoScreenerFactory.sol');
+const Ecosystem = artifacts.require('./SvandisEcosystem.sol');
+const Token = artifacts.require('./SvandisToken.sol');
 const IcoScreener = artifacts.require('./IcoScreener.sol');
 const TokenScreener = artifacts.require('./TokenScreener.sol');
 
@@ -15,7 +17,7 @@ const should = require('chai')
 	.use(require('chai-bignumber')(BigNumber))
 	.should();
 
-contract('SvandisDataRegistry', function ([owner, unknown]) {
+contract('SvandisEcosystem', function ([owner, unknown]) {
 
 	let svandisDataRegistry;
 	let svandisDataFactory;
@@ -26,6 +28,8 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 
 	let tokenScreener;
 	let icoScreener;
+	let ecoSystem;
+	let token;
 
 	before(async function () {
 		tokenScreenerFactory = await TokenScreenerFactory.new();
@@ -43,24 +47,28 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 
 		await tokenScreenerFactory.transferOwnership(svandisDataFactory.address);
 		await icoScreenerFactory.transferOwnership(svandisDataFactory.address);
+
+		svandisDataRegistry = await SvandisDataRegistry.new(svandisDataFactory.address);
+		await svandisDataFactory.transferOwnership(svandisDataRegistry.address);
+		token = await Token.new();
 	});
 
 
-	it('should setup the svandis data registry', async function () {
-		svandisDataRegistry = await SvandisDataRegistry.new(svandisDataFactory.address).should.be.fulfilled;
-		await svandisDataFactory.transferOwnership(svandisDataRegistry.address).should.be.fulfilled;
+	it('should setup the ecosystem', async function () {
+		ecoSystem = await Ecosystem.new(token.address, svandisDataRegistry.address);
+		await svandisDataRegistry.transferOwnership(ecoSystem.address).should.be.fulfilled;
 	});
 
 
 	it('should allow to change data registry address', async function () {
-		await svandisDataRegistry.setSvandisDataFactory(tokenScreenerFactory.address, {from: owner}).should.be.fulfilled;
-		await svandisDataRegistry.setSvandisDataFactory(svandisDataFactory.address, {from: owner}).should.be.fulfilled;
+		await ecoSystem.setSvandisDataRegistry(tokenScreenerFactory.address, {from: owner}).should.be.fulfilled;
+		await ecoSystem.setSvandisDataRegistry(svandisDataRegistry.address, {from: owner}).should.be.fulfilled;
 	});
 
 
 	it('should create a new token screener', async function () {
 		assert.equal(await svandisDataRegistry.getTokenScreenerCount(), 0);
-		let tokenScreenerTx = await svandisDataRegistry.createNewTokenScreener(
+		let tokenScreenerTx = await ecoSystem.createNewTokenScreener(
 			name,
 			ticker,
 			website,
@@ -75,7 +83,7 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 
 	it('should create a new ico screener', async function () {
 		assert.equal(await svandisDataRegistry.getIcoScreenerCount(), 0);
-		let icoScreenerTx = await svandisDataRegistry.createNewIcoScreener(
+		let icoScreenerTx = await ecoSystem.createNewIcoScreener(
 			name,
 			ticker,
 			website,
@@ -88,31 +96,4 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 		assert.equal(await svandisDataRegistry.getIcoScreenerCount(), 1);
 	});
 
-//Here we see how a certified hash based on JSON bytes will demonstrate change
-	it('should update a tokens data hash', async function() {
-		var screener = await TokenScreener.at(tokenScreener);
-		let oldHash = await screener.currentDataHash();
-		await svandisDataRegistry.updateSvandisData(tokenScreener, newDataLoad, {from: owner}).should.be.fulfilled;
-		assert.notEqual(await screener.currentDataHash(), oldHash);
-	});
-
-
-	it('should update an ico data hash', async function() {
-		var screener = await IcoScreener.at(icoScreener);
-		let oldHash = await screener.currentDataHash();
-		await svandisDataRegistry.updateSvandisData(icoScreener, newDataLoad, {from: owner}).should.be.fulfilled;
-		assert.notEqual(await screener.currentDataHash(), oldHash);
-	});
-
-
-	it('should delete a token screener from registry', async function() {
-		await svandisDataRegistry.deleteTokenMappingData(tokenScreener, {from: owner}).should.be.fulfilled;
-		assert.equal(await svandisDataRegistry.getTokenScreenerCount(), 0);
-	});
-
-
-	it('should delete an ico screener from registry', async function() {
-		await svandisDataRegistry.deleteIcoMappingData(icoScreener, {from: owner}).should.be.fulfilled;
-		assert.equal(await svandisDataRegistry.getIcoScreenerCount(), 0);
-	});
 });
