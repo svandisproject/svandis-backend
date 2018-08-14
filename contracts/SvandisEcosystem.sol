@@ -16,6 +16,7 @@ contract SvandisEcosystem is Ownable{
     }
 
     event Created(address indexed owner, address indexed svandisDataLocation);
+    event Updated(address indexed owner, address indexed svandisDataLocation);
 
     function setSvandisDataRegistry(address _svandisDataReg) public onlyOwner returns (bool){
         svandisDataRegistry = _svandisDataReg;
@@ -34,5 +35,12 @@ contract SvandisEcosystem is Ownable{
         address icoScreener = registry.createNewIcoScreener(_name, _ticker, _website, _dataLoad, _tokenGenerationEventTimeStamp);
         emit Created(owner, icoScreener);
         return icoScreener;
+    }
+
+    function updateSvandisData (address _dataAddress, bytes _newData) public onlyOwner returns (bool){
+        SvandisDataRegistry registry = SvandisDataRegistry(svandisDataRegistry);
+        bool success = registry.updateSvandisData(_dataAddress, _newData);
+        emit Updated(owner, _dataAddress);
+        return success;
     }
 }
