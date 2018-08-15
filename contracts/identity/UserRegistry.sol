@@ -1,13 +1,7 @@
 pragma solidity ^0.4.23;
 
-import './ClaimHolderPresigned.sol';
-
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
-
-/// @title UserRegistry
-/// @dev Used to keep registry of user identifies
-/// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 
 contract UserRegistry {
     /*

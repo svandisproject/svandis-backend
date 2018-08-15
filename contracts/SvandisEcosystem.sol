@@ -1,25 +1,40 @@
 pragma solidity ^0.4.23;
 import './token/SvandisToken.sol';
 import './svandisdata/SvandisDataRegistry.sol';
+import './identity/UserRegistry.sol';
+import './identity/ClaimHolderPresigned.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
 
 contract SvandisEcosystem is Ownable{
-  //  UserRegistry public userRegistry;
+    address public userRegistry;
     address public svandisDataRegistry;
     SvandisToken private token;
 
-    constructor(address _token, address _svandisDataReg) public {
+    constructor(address _token, address _svandisDataReg, address _userReg) public {
         svandisDataRegistry = _svandisDataReg;
+        userRegistry = _userReg;
         token = SvandisToken(_token);
         owner = msg.sender;
     }
 
     event Created(address indexed owner, address indexed svandisDataLocation);
     event Updated(address indexed owner, address indexed svandisDataLocation);
+    event NewUserCreated(address indexed owner,
+        address indexed _userRegistryAddress,
+        uint256[] _claimType,
+        address[] indexed _issuer,
+        bytes _signature,
+        bytes _data,
+        uint256[] _offsets);
 
     function setSvandisDataRegistry(address _svandisDataReg) public onlyOwner returns (bool){
         svandisDataRegistry = _svandisDataReg;
+        return true;
+    }
+
+    function setUserRegistry(address _userReg) public onlyOwner returns (bool){
+        userRegistry = _userReg;
         return true;
     }
 
@@ -42,5 +57,10 @@ contract SvandisEcosystem is Ownable{
         bool success = registry.updateSvandisData(_dataAddress, _newData);
         emit Updated(owner, _dataAddress);
         return success;
+    }
+
+    function getClaimHolderFromRegistry(address _identity) public returns (address){
+        UserRegistry usersRegistry = UserRegistry(userRegistry);
+        return usersRegistry.users(_identity);
     }
 }
