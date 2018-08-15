@@ -9,9 +9,9 @@ This project will need the latest Node.js set up on the machine. You should also
 
 ### Compilation
 
-To compile these smart contracts in truffle:
+To compile these smart contracts in truffle (Check truffle.js for your deployment options) :
 
-  `ganache-cli`
+  `truffle develop`
 
   `truffle compile`
 
