@@ -1,37 +1,27 @@
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
-var Web3 = require("web3");
+var web3Instance = require("web3");
+var Web3 = new web3Instance('ws://localhost:9545');
 
 const ClaimHolderRegistered = artifacts.require("ClaimHolderRegistered.sol")
 const KeyHolderLibrary = artifacts.require("KeyHolderLibrary")
 const ClaimHolderLibrary = artifacts.require("ClaimHolderLibrary")
 const UserRegistry = artifacts.require("UserRegistry.sol")
 
-const signature_1 = "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"
-const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976f2776145fef298fd0e31afa43a103cd7f5b00e3b226b0d62e4c492d54bec02eb0c2a0901b"
+let prvSigner1 = Web3.utils.randomHex(32);
+let prvSigner2 = Web3.utils.randomHex(32);
+//let pubSigner = web3.eth.accounts.privateKeyToAccount(prvSigner).address; //Code to create key for public signer
+let attestation_1, attestation_2;
 
-const dataHash_1 = "0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9"
-const dataHash_2 = "0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b88cb48"
+const data_text_1 = 'Verified OK';
+const data_text_2 = 'Verified Not OK';
+
+const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
+const dataHash_2 = Web3.utils.asciiToHex(data_text_2);
 
 contract("ClaimHolderRegistered", accounts => {
   let claimHolderRegistered, userRegistry
-  let attestation_1 = {
-    claimType: 1,
-    scheme: 1,
-    issuer: accounts[1],
-    signature: signature_1,
-    data: dataHash_1,
-    uri: ""
-  }
-  let attestation_2 = {
-      claimType: 2,
-      scheme: 1,
-      issuer: accounts[2],
-      signature: signature_2,
-      data: dataHash_2,
-      uri: ""
-  }
 
   beforeEach(async function() {
     userRegistry = await UserRegistry.new();
@@ -42,6 +32,29 @@ contract("ClaimHolderRegistered", accounts => {
 	  await ClaimHolderRegistered.link('KeyHolderLibrary', keyLibrary.address);
 	  await ClaimHolderRegistered.link('ClaimHolderLibrary', claimLibrary.address);
       claimHolderRegistered = await ClaimHolderRegistered.new(userRegistry.address, { from: accounts[0] })
+	  var claimType_1 = 1;
+	  var hashed = Web3.utils.soliditySha3(claimHolderRegistered.address, claimType_1, dataHash_1);
+	  var signed = await Web3.eth.accounts.sign(hashed, prvSigner1);
+	  var claimType_2 = 2;
+	  var hashed2 = Web3.utils.sha3(claimHolderRegistered.address, claimType_2, dataHash_2);
+	  var signed2 = await Web3.eth.accounts.sign(hashed2, prvSigner2);
+
+	  attestation_1 = {
+		  claimType: claimType_1,
+		  scheme: 1,
+		  issuer: accounts[1],
+		  signature: signed.signature,
+		  data: dataHash_1,
+		  uri: ""
+	  }
+	  attestation_2 = {
+		  claimType: 2,
+		  scheme: 1,
+		  issuer: accounts[2],
+		  signature: signed2.signature,
+		  data: dataHash_2,
+		  uri: ""
+	  }
   })
 
   it("can add and get claim", async function() {
@@ -75,9 +88,9 @@ contract("ClaimHolderRegistered", accounts => {
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
       attestation_1.data + attestation_2.data.slice(2),
-      [32, 32],
+      [data_text_1.length, data_text_2.length],
       { from: accounts[0] }
-    )
+    );
 
     let claimId_1 = Web3.utils.soliditySha3(
       attestation_1.issuer,
