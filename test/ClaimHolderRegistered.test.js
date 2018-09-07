@@ -31,7 +31,7 @@ contract("ClaimHolderRegistered", accounts => {
 	  let claimLibrary = await ClaimHolderLibrary.new();
 	  await ClaimHolderRegistered.link('KeyHolderLibrary', keyLibrary.address);
 	  await ClaimHolderRegistered.link('ClaimHolderLibrary', claimLibrary.address);
-      claimHolderRegistered = await ClaimHolderRegistered.new(userRegistry.address, { from: accounts[0] })
+      claimHolderRegistered = await ClaimHolderRegistered.new(accounts[4], accounts[5], userRegistry.address, { from: accounts[0] })
 	  var claimType_1 = 1;
 	  var hashed = Web3.utils.soliditySha3(claimHolderRegistered.address, claimType_1, dataHash_1);
 	  var signed = await Web3.eth.accounts.sign(hashed, prvSigner1);
@@ -122,7 +122,7 @@ contract("ClaimHolderRegistered", accounts => {
   })
 
   it("registers the user", async function() {
-    let identityAddress = await userRegistry.users(accounts[0])
+    let identityAddress = await userRegistry.users(accounts[4])
     assert.ok(identityAddress)
     assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000")
   })

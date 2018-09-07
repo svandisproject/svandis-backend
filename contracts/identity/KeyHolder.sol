@@ -8,8 +8,13 @@ import './KeyHolderLibrary.sol';
 contract KeyHolder is ERC725 {
     KeyHolderLibrary.KeyHolderData keyHolderData;
 
-    constructor() public {
-        KeyHolderLibrary.init(keyHolderData);
+    constructor(
+        address _newUserAddress,
+        address _backupAddress
+        )
+        public
+    {
+        KeyHolderLibrary.init(keyHolderData, _newUserAddress, _backupAddress);
     }
 
     function getKey(bytes32 _key)

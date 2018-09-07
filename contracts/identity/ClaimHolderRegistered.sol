@@ -8,11 +8,14 @@ import './UserRegistry.sol';
 contract ClaimHolderRegistered is ClaimHolder {
 
   constructor (
-    address _userRegistryAddress
+        address _newUserAddress,
+        address _backupAddress,
+        address _userRegistryAddress
   )
+      ClaimHolder(_newUserAddress, _backupAddress)
       public
   {
       UserRegistry userRegistry = UserRegistry(_userRegistryAddress);
-      userRegistry.registerUser();
+      userRegistry.registerUser(_newUserAddress);
   }
 }

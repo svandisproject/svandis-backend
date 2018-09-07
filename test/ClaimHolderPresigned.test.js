@@ -39,7 +39,8 @@ contract("ClaimHolderPresigned", accounts => {
 	  let claimLibrary = await ClaimHolderLibrary.new();
 	  await ClaimHolderPresigned.link('KeyHolderLibrary', keyLibrary.address);
 	  await ClaimHolderPresigned.link('ClaimHolderLibrary', claimLibrary.address);
-    let instance = await ClaimHolderPresigned.new(
+    let instance = await ClaimHolderPresigned.new(accounts[4],
+      accounts[5],
       userRegistry.address,
       [ attestation_1.claimType, attestation_2.claimType ],
       [ attestation_1.issuer, attestation_2.issuer ],
@@ -74,7 +75,7 @@ contract("ClaimHolderPresigned", accounts => {
     assert.equal(uri_2, attestation_2.uri)
 
     // Check user registry
-    let identityAddress = await userRegistry.users(accounts[0])
+    let identityAddress = await userRegistry.users(accounts[4])
     assert.ok(identityAddress)
     assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000")
   })

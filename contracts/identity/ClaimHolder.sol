@@ -10,6 +10,10 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     ClaimHolderLibrary.Claims claims;
 
+    constructor(address _newUserAddress, address _backupAddress)
+        KeyHolder(_newUserAddress, _backupAddress)
+    public {}
+
     function addClaim(
         uint256 _claimType,
         uint256 _scheme,

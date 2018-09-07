@@ -13,6 +13,8 @@ import './ClaimHolderRegistered.sol';
 contract ClaimHolderPresigned is ClaimHolderRegistered {
 
     constructor(
+        address _newUserAddress,
+        address _backupAddress,
         address _userRegistryAddress,
         uint256[] _claimType,
         address[] _issuer,
@@ -20,7 +22,7 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
         bytes _data,
         uint256[] _offsets
     )
-        ClaimHolderRegistered(_userRegistryAddress)
+        ClaimHolderRegistered(_newUserAddress, _backupAddress, _userRegistryAddress)
         public
     {
         ClaimHolderLibrary.addClaims(

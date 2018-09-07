@@ -66,7 +66,10 @@ contract("Identity integration", accounts => {
 			attestation_1.issuer,
 			attestation_1.claimType
 		)
-		claimHolder = await ClaimHolderPresigned.new(userRegistry.address,
+		claimHolder = await ClaimHolderPresigned.new(
+			accounts[4],
+			accounts[5],
+			userRegistry.address,
 			[attestation_1.claimType],
 			[attestation_1.issuer],
 			attestation_1.signature,
@@ -87,10 +90,8 @@ contract("Identity integration", accounts => {
 	})
 
 	it("should have set management key", async function() {
-		let acctSha3 = Web3.utils.keccak256(accounts[0]);
-		console.log(acctSha3);
+		let acctSha3 = Web3.utils.keccak256(accounts[4]);
 		var res = await claimHolder.getKey(acctSha3);
-		console.log(res);
 		assert.equal(new BigNumber(res[0]), '1');
 		assert.equal(new BigNumber(res[1]), '1');
 		assert.equal(res[2], acctSha3);

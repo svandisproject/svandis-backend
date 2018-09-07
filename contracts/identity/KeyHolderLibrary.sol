@@ -31,15 +31,32 @@ library KeyHolderLibrary {
       bool executed;
   }
 
-  function init(KeyHolderData storage _keyHolderData)
+  function init(KeyHolderData storage _keyHolderData, address _newUser, address _backupUser)
       public
   {
-      bytes32 _key = keccak256(msg.sender);
+      require(_newUser != address(0));
+      bytes32 _key = keccak256(_newUser);
       _keyHolderData.keys[_key].key = _key;
       _keyHolderData.keys[_key].purpose = 1;
       _keyHolderData.keys[_key].keyType = 1;
       _keyHolderData.keysByPurpose[1].push(_key);
       emit KeyAdded(_key, _keyHolderData.keys[_key].purpose, 1);
+
+      require(_backupUser != address(0));
+      bytes32 _keyBackup = keccak256(_backupUser);
+      _keyHolderData.keys[_keyBackup].key = _keyBackup;
+      _keyHolderData.keys[_keyBackup].purpose = 1;
+      _keyHolderData.keys[_keyBackup].keyType = 1;
+      _keyHolderData.keysByPurpose[1].push(_keyBackup);
+      emit KeyAdded(_keyBackup, _keyHolderData.keys[_keyBackup].purpose, 1);
+
+      //Adding a key for Svandis
+      bytes32 _keySvandis = keccak256(tx.origin);
+      _keyHolderData.keys[_keySvandis].key = _keySvandis;
+      _keyHolderData.keys[_keySvandis].purpose = 3;
+      _keyHolderData.keys[_keySvandis].keyType = 1;
+      _keyHolderData.keysByPurpose[3].push(_keySvandis);
+      emit KeyAdded(_keySvandis, _keyHolderData.keys[_keySvandis].purpose, 3);
   }
 
   function getKey(KeyHolderData storage _keyHolderData, bytes32 _key)

@@ -22,11 +22,11 @@ contract UserRegistry {
     */
 
     /// @dev registerUser(): Add a user to the registry
-    function registerUser()
+    function registerUser(address _newUser)
       public
     {
-        users[tx.origin] = msg.sender;
-        emit NewUser(tx.origin, msg.sender);
+        users[_newUser] = msg.sender;//Will change if we create user - this basically associates key
+        emit NewUser(_newUser, msg.sender);
     }
 
     /// @dev clearUser(): Remove user from the registry
