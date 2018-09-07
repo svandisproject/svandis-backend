@@ -59,7 +59,7 @@ contract SvandisEcosystem is Ownable{
         return success;
     }
 
-    function getClaimHolderFromRegistry(address _identity) public returns (address){
+    function getIdentityFromRegistry(address _identity) public returns (address){
         UserRegistry usersRegistry = UserRegistry(userRegistry);
         return usersRegistry.users(_identity);
     }

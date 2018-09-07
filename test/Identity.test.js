@@ -26,7 +26,7 @@ contract("Identity integration", accounts => {
   let claimHolder, userRegistry
 
   beforeEach(async function() {
-    userRegistry = await UserRegistry.new({from: accounts[3]});
+    userRegistry = await UserRegistry.new({from: accounts[0]});
 
 	  let keyLibrary = await KeyHolderLibrary.new();
 	  await ClaimHolderLibrary.link('KeyHolderLibrary', keyLibrary.address);

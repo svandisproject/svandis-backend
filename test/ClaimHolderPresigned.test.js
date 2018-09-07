@@ -33,7 +33,7 @@ contract("ClaimHolderPresigned", accounts => {
   };
 
   it("should deploy identity with attestations", async function() {
-    let userRegistry = await UserRegistry.new( { from: accounts[3] } )
+    let userRegistry = await UserRegistry.new( { from: accounts[0] } )
 	  let keyLibrary = await KeyHolderLibrary.new();
 	  await ClaimHolderLibrary.link('KeyHolderLibrary', keyLibrary.address);
 	  let claimLibrary = await ClaimHolderLibrary.new();

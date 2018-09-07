@@ -1,9 +1,10 @@
 pragma solidity ^0.4.23;
 
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
-contract UserRegistry {
+contract UserRegistry is Ownable {
     /*
     * Events
     */
@@ -25,6 +26,7 @@ contract UserRegistry {
     function registerUser(address _newUser)
       public
     {
+        require(tx.origin == owner);
         users[_newUser] = msg.sender;//Will change if we create user - this basically associates key
         emit NewUser(_newUser, msg.sender);
     }
@@ -33,6 +35,7 @@ contract UserRegistry {
     function clearUser()
       public
     {
+        require(tx.origin == owner);
         users[msg.sender] = 0;
     }
 }

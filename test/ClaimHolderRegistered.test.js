@@ -24,7 +24,7 @@ contract("ClaimHolderRegistered", accounts => {
   let claimHolderRegistered, userRegistry
 
   beforeEach(async function() {
-    userRegistry = await UserRegistry.new();
+    userRegistry = await UserRegistry.new({from: accounts[0]});
 
 	  let keyLibrary = await KeyHolderLibrary.new();
 	  await ClaimHolderLibrary.link('KeyHolderLibrary', keyLibrary.address);

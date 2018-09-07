@@ -152,7 +152,7 @@ address indexed _userRegistryAddress,
 		uri: ""
 	};
 
-	it('should get claim holder', async function () {
+	it('should get claim holder from user registry', async function () {
 
 		let instance = await ClaimHolderPresigned.new(
 			newuser,
@@ -163,8 +163,8 @@ address indexed _userRegistryAddress,
 			attestation_1.signature + attestation_2.signature.slice(2),
 			attestation_1.data + attestation_2.data.slice(2),
 			[32, 32], {from: owner});
-		let updateTx = await ecoSystem.getClaimHolderFromRegistry(
-			newuser);
+		let updateTx = await ecoSystem.getIdentityFromRegistry(
+			newuser).should.be.fulfilled;
 		let identityAddress = await userRegistry.users(newuser);
 		assert.ok(identityAddress);
 		assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000");
