@@ -63,4 +63,23 @@ contract SvandisEcosystem is Ownable{
         UserRegistry usersRegistry = UserRegistry(userRegistry);
         return usersRegistry.users(_identity);
     }
+
+
+    function createNewUser(address _newUserAddress,
+        address _backupAddress,
+        uint256[] _claimType,
+        address[] _issuer,
+        bytes _signature,
+        bytes _data,
+        uint256[] _offsets) public onlyOwner returns (address){
+        return new ClaimHolderPresigned(
+            _newUserAddress,
+            _backupAddress,
+            userRegistry,
+            _claimType,
+            _issuer,
+            _signature,
+            _data,
+            _offsets);
+    }
 }

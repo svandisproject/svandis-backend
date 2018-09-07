@@ -75,8 +75,8 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 		await Ecosystem.link('ClaimHolderLibrary', claimLibrary.address);
 		await ClaimHolderPresigned.link('KeyHolderLibrary', keyLibrary.address);
 		await ClaimHolderPresigned.link('ClaimHolderLibrary', claimLibrary.address);
-        userRegistry = await UserRegistry.new();
-		ecoSystem = await Ecosystem.new(token.address, svandisDataRegistry.address, userRegistry.address);
+        userRegistry = await UserRegistry.new({from: owner});
+		ecoSystem = await Ecosystem.new(token.address, svandisDataRegistry.address, userRegistry.address, {from: owner});
 		await svandisDataRegistry.transferOwnership(ecoSystem.address).should.be.fulfilled;
 	});
 
@@ -152,23 +152,22 @@ address indexed _userRegistryAddress,
 		uri: ""
 	};
 
-	it('should get claim holder from user registry', async function () {
-
-		let instance = await ClaimHolderPresigned.new(
+	it('should get claim holder from user registry after creating user properly', async function () {
+		assert.equal(await userRegistry.users(newuser), "0x0000000000000000000000000000000000000000");
+		let instance = await ecoSystem.createNewUser(
 			newuser,
  			backup,
-			userRegistry.address,
 			[ attestation_1.claimType, attestation_2.claimType ],
 			[ attestation_1.issuer, attestation_2.issuer ],
 			attestation_1.signature + attestation_2.signature.slice(2),
 			attestation_1.data + attestation_2.data.slice(2),
-			[32, 32], {from: owner});
+			[32, 32], {from: owner}).should.be.fulfilled;
+
 		let updateTx = await ecoSystem.getIdentityFromRegistry(
 			newuser).should.be.fulfilled;
 		let identityAddress = await userRegistry.users(newuser);
 		assert.ok(identityAddress);
 		assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000");
-		assert.equal(identityAddress, instance.address);
 	});
 
 });

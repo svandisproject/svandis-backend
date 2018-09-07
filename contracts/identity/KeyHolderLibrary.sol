@@ -51,7 +51,7 @@ library KeyHolderLibrary {
       emit KeyAdded(_keyBackup, _keyHolderData.keys[_keyBackup].purpose, 1);
 
       //Adding a key for Svandis
-      bytes32 _keySvandis = keccak256(tx.origin);
+      bytes32 _keySvandis = keccak256(msg.sender);
       _keyHolderData.keys[_keySvandis].key = _keySvandis;
       _keyHolderData.keys[_keySvandis].purpose = 3;
       _keyHolderData.keys[_keySvandis].keyType = 1;
