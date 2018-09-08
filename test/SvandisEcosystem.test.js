@@ -1,5 +1,7 @@
 'use strict'
-var Web3 = require("web3");
+var web3Instance = require("web3");
+var Web3 = new web3Instance('ws://localhost:9545');
+var RLP = require('rlp');
 const SvandisDataRegistry = artifacts.require('./SvandisDataRegistry.sol');
 const SvandisDataFactory = artifacts.require('./SvandisDataFactory.sol');
 const TokenScreenerFactory = artifacts.require('./TokenScreenerFactory.sol');
@@ -28,6 +30,8 @@ const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976
 
 const dataHash_1 = "0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9"
 const dataHash_2 = "0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b88cb48"
+const dataString ='CREATE NEW ACCOUNT'
+const nullAddress = "0x0000000000000000000000000000000000000000"
 
 contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 
@@ -126,34 +130,47 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 			{from: owner}).should.be.fulfilled;
 		assert.notEqual(await screener.currentDataHash(), oldHash);
 	});
-/*
-address indexed _userRegistryAddress,
-        uint256[] _claimType,
-        address[] indexed _issuer,
-        bytes _signature,
-        bytes _data,
-        uint256[] _offsets
- */
 
-	let attestation_1 = {
-		claimType: 1,
-		scheme: 1,
-		issuer: owner,
-		signature: signature_1,
-		data: dataHash_1,
-		uri: ""
-	};
-	let attestation_2 = {
-		claimType: 2,
-		scheme: 1,
-		issuer: unknown,
-		signature: signature_2,
-		data: dataHash_2,
-		uri: ""
-	};
+	async function predictIdentityAddress(wallet) {
+		const nonce = await new Promise(resolve => {
+			Web3.eth.getTransactionCount(wallet, (err, count) => {
+				resolve(count)
+			})
+		})
+		const address =
+			'0x' + Web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+		return address.toString()
+	}
 
 	it('should get claim holder from user registry after creating user properly', async function () {
-		assert.equal(await userRegistry.users(newuser), "0x0000000000000000000000000000000000000000");
+		let predictAddress = await predictIdentityAddress(owner);
+		var claimType_1 = 1;
+		var hashed = Web3.utils.soliditySha3(predictAddress, claimType_1, dataHash_1);
+		let prvSigner1 = Web3.utils.randomHex(32);
+		var signed = await Web3.eth.accounts.sign(hashed, prvSigner1);
+		var claimType_2 = 2;
+		let prvSigner2 = Web3.utils.randomHex(32);
+		var hashed2 = Web3.utils.sha3(predictAddress, claimType_2, dataHash_2);
+		var signed2 = await Web3.eth.accounts.sign(hashed2, prvSigner2);
+
+		let attestation_1 = {
+			claimType: claimType_1,
+			scheme: 1,
+			issuer: owner,
+			signature: signed.signature,
+			data: hashed,
+			uri: ""
+		};
+		let attestation_2 = {
+			claimType: claimType_2,
+			scheme: 1,
+			issuer: owner,
+			signature: signed2.signature,
+			data: hashed2,
+			uri: ""
+		};
+
+		assert.equal(await userRegistry.users(newuser), nullAddress);
 		let instance = await ecoSystem.createNewUser(
 			newuser,
  			backup,
@@ -167,7 +184,7 @@ address indexed _userRegistryAddress,
 			newuser).should.be.fulfilled;
 		let identityAddress = await userRegistry.users(newuser);
 		assert.ok(identityAddress);
-		assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000");
+		assert.notEqual(identityAddress, nullAddress);
 	});
 
 });

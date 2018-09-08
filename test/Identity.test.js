@@ -36,7 +36,6 @@ contract("Identity integration", accounts => {
   })
 
 	async function predictIdentityAddress(wallet) {
-  	console.log(wallet);
 		const nonce = await new Promise(resolve => {
 			Web3.eth.getTransactionCount(wallet, (err, count) => {
 				resolve(count)
@@ -50,7 +49,6 @@ contract("Identity integration", accounts => {
 	it("can create presigned", async function() {
 		var claimType_1 = 1;
 		let predictAddress = await predictIdentityAddress(accounts[0]);
-		console.log("Predicted: " + predictAddress);
 		var hashed = Web3.utils.soliditySha3(predictAddress, claimType_1, dataHash_1);
 		var signed = await Web3.eth.accounts.sign(hashed, prvSigner1);
 
