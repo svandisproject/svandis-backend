@@ -187,4 +187,7 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 		assert.notEqual(identityAddress, nullAddress);
 	});
 
+	it('should allow to delete that user', async function () {
+		await ecoSystem.removeUser(newuser, {from: owner}).should.be.fulfilled;
+	});
 });

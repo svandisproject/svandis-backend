@@ -10,6 +10,7 @@ contract UserRegistry is Ownable {
     */
 
     event NewUser(address _address, address _identity);
+    event RemovedUser(address _address, address _identity);
 
     /*
     * Storage
@@ -32,10 +33,12 @@ contract UserRegistry is Ownable {
     }
 
     /// @dev clearUser(): Remove user from the registry
-    function clearUser()
+    function clearUser(address _specificUser)
       public
     {
         require(tx.origin == owner);
-        users[msg.sender] = 0;
+        address identity = users[_specificUser];
+        users[_specificUser] = 0;
+        emit RemovedUser(_specificUser, identity);
     }
 }

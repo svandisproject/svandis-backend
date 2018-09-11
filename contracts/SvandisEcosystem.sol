@@ -82,4 +82,9 @@ contract SvandisEcosystem is Ownable{
             _data,
             _offsets);
     }
+
+    function removeUser(address _userToBeRemoved) public onlyOwner {
+        UserRegistry usersRegistry = UserRegistry(userRegistry);
+        usersRegistry.clearUser(_userToBeRemoved);
+    }
 }
