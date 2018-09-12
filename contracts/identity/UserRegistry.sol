@@ -9,8 +9,10 @@ contract UserRegistry is Ownable {
     * Events
     */
 
-    event NewUser(address _address, address _identity);
-    event RemovedUser(address _address, address _identity);
+    event NewUser(address indexed _address, address indexed _identity);
+    event SwappedUser(address indexed _address, address indexed _identity);
+    event RemovedUser(address indexed _address, address indexed _identity);
+    event ExtraUser(address indexed _originalAddress, address indexed _newAddress, address indexed _identity);
 
     /*
     * Storage
@@ -22,8 +24,6 @@ contract UserRegistry is Ownable {
     /*
     * Public functions
     */
-
-    /// @dev registerUser(): Add a user to the registry
     function registerUser(address _newUser)
       public
     {
@@ -32,7 +32,25 @@ contract UserRegistry is Ownable {
         emit NewUser(_newUser, msg.sender);
     }
 
-    /// @dev clearUser(): Remove user from the registry
+
+    function swapUser(address _newUser, address _oldUser)
+    public
+    {
+        require(tx.origin == owner);
+        users[_newUser] = users[_oldUser];//Will change if we create user - this basically associates key
+        clearUser(_oldUser);
+        emit SwappedUser(_newUser, msg.sender);
+    }
+
+
+    function addExtraUserAccount(address _originalAddress, address _extraAddress)
+    public
+    {
+        require(tx.origin == owner);
+        users[_extraAddress] = users[_originalAddress];//Will change if we create user - this basically associates key
+        emit ExtraUser(_originalAddress, _extraAddress, users[_extraAddress]);
+    }
+    
     function clearUser(address _specificUser)
       public
     {

@@ -33,7 +33,7 @@ const dataHash_2 = "0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b
 const dataString ='CREATE NEW ACCOUNT'
 const nullAddress = "0x0000000000000000000000000000000000000000"
 
-contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
+contract('SvandisEcosystem', function ([owner, unknown, newuser, swappeduser, extrauser]) {
 
 	let svandisDataRegistry;
 	let svandisDataFactory;
@@ -143,7 +143,7 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 	}
 
 	it('should get claim holder from user registry after creating user properly', async function () {
-		let predictAddress = await predictIdentityAddress(owner);
+		let predictAddress = await predictIdentityAddress(ecoSystem.address);
 		var claimType_1 = 1;
 		var hashed = Web3.utils.soliditySha3(predictAddress, claimType_1, dataHash_1);
 		let prvSigner1 = Web3.utils.randomHex(32);
@@ -171,9 +171,8 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 		};
 
 		assert.equal(await userRegistry.users(newuser), nullAddress);
-		let instance = await ecoSystem.createNewUser(
+		let instance = await ecoSystem.createNewCentralizedUser(
 			newuser,
- 			backup,
 			[ attestation_1.claimType, attestation_2.claimType ],
 			[ attestation_1.issuer, attestation_2.issuer ],
 			attestation_1.signature + attestation_2.signature.slice(2),
@@ -187,7 +186,15 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, backup]) {
 		assert.notEqual(identityAddress, nullAddress);
 	});
 
+	it('should allow to swap key', async function () {
+		await ecoSystem.swapMainKeyForSvandisCentralizedUserAccounts(newuser, swappeduser,  {from: owner}).should.be.fulfilled;
+	});
+
+	it('should allow to add an extra key to svandis centralized (key managed) accounts', async function () {
+		await ecoSystem.addExtraKeyForSvandisCentralizedUserAccounts(swappeduser, extrauser,  {from: owner}).should.be.fulfilled;
+	});
+
 	it('should allow to delete that user', async function () {
-		await ecoSystem.removeUser(newuser, {from: owner}).should.be.fulfilled;
+		await ecoSystem.removeUser(swappeduser, {from: owner}).should.be.fulfilled;
 	});
 });

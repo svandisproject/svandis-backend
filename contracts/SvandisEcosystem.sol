@@ -59,9 +59,9 @@ contract SvandisEcosystem is Ownable{
         return success;
     }
 
-    function getIdentityFromRegistry(address _identity) public returns (address){
+    function getIdentityFromRegistry(address _user) public returns (address){
         UserRegistry usersRegistry = UserRegistry(userRegistry);
-        return usersRegistry.users(_identity);
+        return usersRegistry.users(_user);
     }
 
 
@@ -83,8 +83,46 @@ contract SvandisEcosystem is Ownable{
             _offsets);
     }
 
+    function createNewCentralizedUser(address _newUserAddress,
+        uint256[] _claimType,
+        address[] _issuer,
+        bytes _signature,
+        bytes _data,
+        uint256[] _offsets) public onlyOwner returns (address){
+            return new ClaimHolderPresigned(
+            _newUserAddress,
+            address(this),
+            userRegistry,
+            _claimType,
+            _issuer,
+            _signature,
+            _data,
+            _offsets);
+    }
+
     function removeUser(address _userToBeRemoved) public onlyOwner {
         UserRegistry usersRegistry = UserRegistry(userRegistry);
         usersRegistry.clearUser(_userToBeRemoved);
+    }
+
+     //Only for accounts with svandis as recovery mechanism
+     function swapMainKeyForSvandisCentralizedUserAccounts(address _oldUserAddress, address _newUserAddress) public onlyOwner returns (bool){
+        address identity = getIdentityFromRegistry(_oldUserAddress);
+        ClaimHolderPresigned identityKeyHolder = ClaimHolderPresigned(identity);
+        identityKeyHolder.removeKey(keccak256(_oldUserAddress));
+        identityKeyHolder.addKey(keccak256(_newUserAddress), 1, 1);
+        UserRegistry usersRegistry = UserRegistry(userRegistry);
+        usersRegistry.swapUser(_newUserAddress, _oldUserAddress);
+        return true;
+     }
+
+     //Only for accounts with svandis as recovery mechanism
+    function addExtraKeyForSvandisCentralizedUserAccounts(address _originalAddress, address _extraUserAddress) public onlyOwner returns (bool){
+        address identity = getIdentityFromRegistry(_originalAddress);
+        ClaimHolderPresigned identityKeyHolder = ClaimHolderPresigned(identity);
+        identityKeyHolder.addKey(keccak256(_extraUserAddress), 1, 1);
+        UserRegistry usersRegistry = UserRegistry(userRegistry);
+        usersRegistry.addExtraUserAccount(_originalAddress, _extraUserAddress);
+        return true;
     }
 }
