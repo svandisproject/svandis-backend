@@ -52,11 +52,25 @@ contract SvandisEcosystem is Ownable{
         return icoScreener;
     }
 
-    function updateSvandisData (address _dataAddress, bytes _newData) public onlyOwner returns (bool){
-        SvandisDataRegistry registry = SvandisDataRegistry(svandisDataRegistry);
-        bool success = registry.updateSvandisData(_dataAddress, _newData);
-        emit Updated(owner, _dataAddress);
-        return success;
+    function updateSvandisData (address _dataAddress,
+        bytes _newData,
+        address[] _consensusUsers,
+        uint256[] _consensusUserNewRatings,
+        bool[] _metConsensus)
+        public onlyOwner returns (bool){
+            require(_consensusUsers.length == _consensusUserNewRatings.length);
+            require(_consensusUsers.length == _metConsensus.length);
+            SvandisDataRegistry registry = SvandisDataRegistry(svandisDataRegistry);
+            bool success = registry.updateSvandisData(_dataAddress, _newData);
+            UserRegistry usersRegistry = UserRegistry(userRegistry);
+            for(uint i=0; i<_consensusUsers.length; i++){
+                usersRegistry.changeUserRating(_consensusUsers[i], _consensusUserNewRatings[i]);
+                if(_metConsensus[i]==true){
+                //Todo token rewards based on whether user met consensus off chain
+                }
+            }
+            emit Updated(owner, _dataAddress);
+            return success;
     }
 
     function getIdentityFromRegistry(address _user) public returns (address){

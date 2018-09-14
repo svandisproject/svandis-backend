@@ -121,16 +121,6 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, swappeduser, ex
 		assert.equal(await svandisDataRegistry.getIcoScreenerCount(), 1);
 	});
 
-	it('should update a screener', async function () {
-		var screener = await IcoScreener.at(icoScreener);
-		let oldHash = await screener.currentDataHash();
-		let updateTx = await ecoSystem.updateSvandisData(
-			icoScreener,
-			newDataLoad,
-			{from: owner}).should.be.fulfilled;
-		assert.notEqual(await screener.currentDataHash(), oldHash);
-	});
-
 	async function predictIdentityAddress(wallet) {
 		const nonce = await new Promise(resolve => {
 			Web3.eth.getTransactionCount(wallet, (err, count) => {
@@ -184,6 +174,19 @@ contract('SvandisEcosystem', function ([owner, unknown, newuser, swappeduser, ex
 		let identityAddress = await userRegistry.users(newuser);
 		assert.ok(identityAddress);
 		assert.notEqual(identityAddress, nullAddress);
+	});
+
+	it('should update a screener', async function () {
+		var screener = await IcoScreener.at(icoScreener);
+		let oldHash = await screener.currentDataHash();
+		let updateTx = await ecoSystem.updateSvandisData(
+			icoScreener,
+			newDataLoad,
+			[newuser],
+			[10],
+			[true],
+			{from: owner}).should.be.fulfilled;
+		assert.notEqual(await screener.currentDataHash(), oldHash);
 	});
 
 	it('should allow to swap key', async function () {
