@@ -18,7 +18,6 @@ contract UserRegistry is Ownable {
     /*
     * Storage
     */
-
     // Mapping from ethereum wallet to ERC725 identity
     mapping(address => address) public users;
 
@@ -55,7 +54,6 @@ contract UserRegistry is Ownable {
         emit SwappedUser(_newUser, msg.sender);
     }
 
-
     function addExtraUserAccount(address _originalAddress, address _extraAddress)
     public
     {
@@ -73,7 +71,6 @@ contract UserRegistry is Ownable {
         researchRatings[identity] = 0;
         emit RemovedUser(_specificUser, identity);
     }
-
 
     function clearSelf()
     public
