@@ -11,3 +11,7 @@ build
 # IDE
 
 .idea
+
+# Coverage
+
+coverage
