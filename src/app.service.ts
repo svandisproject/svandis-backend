@@ -4,11 +4,11 @@ import {SvandisDataDto} from './data_models/SvandisData.dto';
 
 @Injectable()
 export class AppService {
-  root(): string {
-    return 'This is the Svandis Backend!';
-  }
+    root(): string {
+      return 'This is the Svandis Backend!';
+    }
     createUser(createUserDto: NewUserDto): string {
-        return 'Will create new user';
+        return 'The Recovery address is: ' + createUserDto.recoveryAddress;
     }
     newSvandisData(createUserDto: SvandisDataDto): string {
         return 'Will create new svandis data';

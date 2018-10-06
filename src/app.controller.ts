@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req, Res, Param } from '@nestjs/common';
+import {Controller, Get, Post, Body, Req, Res, Param, ValidationPipe} from '@nestjs/common';
 import { AppService } from './app.service';
 import {NewUserDto} from './data_models/NewUser.dto';
 import {SvandisDataDto} from './data_models/SvandisData.dto';
@@ -8,7 +8,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
     @Post('create-user')
-    async createUser(@Body() newUserDto: NewUserDto) {
+    async createUser(@Body(new ValidationPipe({transform: true})) newUserDto: NewUserDto) {
         return this.appService.createUser(newUserDto);
     }
 

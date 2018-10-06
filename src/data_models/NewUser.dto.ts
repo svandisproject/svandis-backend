@@ -2,11 +2,8 @@ import { IsString, IsInt } from 'class-validator';
 
 export class NewUserDto {
     @IsString()
-    readonly datasignature: string = '0x002393';
-
-    @IsInt()
-    readonly isExpert: number = 1;
+    readonly dataSignature: string;
 
     @IsString()
-    readonly recoveryAddress: string = '0xrecovery';
+    readonly recoveryAddress: string;
 }
