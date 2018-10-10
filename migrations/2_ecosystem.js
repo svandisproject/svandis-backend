@@ -1,6 +1,4 @@
 var Migrations = artifacts.require("./Migrations.sol");
-const TokenScreenerFactory = artifacts.require('./svandisdata/factory/TokenScreenerFactory.sol');
-const IcoScreenerFactory = artifacts.require('./svandisdata/factory/IcoScreenerFactory.sol');
 const SvandisDataFactory = artifacts.require('./svandisdata/factory/SvandisDataFactory.sol');
 const SvandisDataRegistry = artifacts.require('./svandisdata/SvandisDataRegistry.sol');
 const SvandisToken = artifacts.require('./token/SvandisToken.sol');
@@ -10,22 +8,18 @@ const ClaimHolderPresigned = artifacts.require('./identity/ClaimHolderPresigned.
 const UserRegistry = artifacts.require('./identity/UserRegistry.sol');
 const SvandisEcosystem = artifacts.require('./SvandisEcosystem.sol');
 
+var config = require('../test-config.json');
+const fs = require('fs');
+
 module.exports = function(deployer) {
 	// Create Token Screener Factory
-	deployer.deploy(TokenScreenerFactory).then(function(){
-		// Create Ico Screener Factory
-		deployer.deploy(IcoScreenerFactory).then(function(){
 			//Create Svandis Data Factory
-			deployer.deploy(SvandisDataFactory, TokenScreenerFactory.address, IcoScreenerFactory.address).then(function(instance){
-
-				// Transfer Ownership of Screener factories to Svandis Data Factory
-				TokenScreenerFactory.at(TokenScreenerFactory.address).transferOwnership(instance.address);
-				IcoScreenerFactory.at(IcoScreenerFactory.address).transferOwnership(instance.address);
+			deployer.deploy(SvandisDataFactory).then(function(instance){
 
 				// Create a new Svandis Data Registry
 				deployer.deploy(SvandisDataRegistry, instance.address).then(function(instance){
 					// Transfer Ownership the Svandis Data Registry to the Svandis Data Factory
-					instance.transferOwnership(SvandisDataFactory.address);
+					SvandisDataFactory.at(SvandisDataFactory.address).transferOwnership(instance.address);
 
 					//Create the Svandis Token
 					deployer.deploy(SvandisToken);
@@ -53,12 +47,16 @@ module.exports = function(deployer) {
 
 									// Transfer Ownership for the User Registry to the Ecosystem
 									UserRegistry.at(UserRegistry.address).transferOwnership(instance.address);
+									SvandisDataRegistry.at(SvandisDataRegistry.address).transferOwnership(instance.address);
+									SvandisEcosystem.at(instance.address).transferOwnership(config.ownerAddress);
+									config.ecosystemAddress = instance.address;
+									fs.writeFileSync('./test-config.json', JSON.stringify(config), function(err) {
+										if (err) console.log("Error while adding Deployed Ecosystem Address" + err);
+									});
 								});
 							});
 						});
 					});
 				});
 			});
-		});
-	});
 };

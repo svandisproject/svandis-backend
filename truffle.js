@@ -8,7 +8,7 @@ module.exports = {
 	networks: {
 		development: {
 			host: 'localhost',
-			port: 8545,
+			port: 9545,
 			network_id: '*' // Match any network id
 		},
 		coverage: {
@@ -20,7 +20,7 @@ module.exports = {
 		},
 		kovan: {
 			provider: function() {
-				return new HDWalletProvider(config.mnemonic, "http://localhost:8545", 0, 3)
+				return new HDWalletProvider(config.mnemonic, config.rpc, 0, 3)
 			},
 			network_id: 42,
 			gas: 6500000, // <-- Use this high gas value

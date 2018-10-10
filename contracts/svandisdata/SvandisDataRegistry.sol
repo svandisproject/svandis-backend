@@ -33,8 +33,7 @@ contract SvandisDataRegistry is Ownable {
     public onlyOwner returns (address newTokenScreener) {
         SvandisDataFactory factory = SvandisDataFactory(svandisDataFactory);
         address tokenScreen = factory.newTokenScreener(address(this), _name, _ticker, _website, _dataLoad);
-
-        tokenScreenerMapping[tokenScreen] = icoScreenerIndex.length;
+        tokenScreenerMapping[tokenScreen] = tokenScreenerIndex.length;
         tokenScreenerIndex.push(tokenScreen);
         emit Created(owner, tokenScreen);
         return tokenScreen;

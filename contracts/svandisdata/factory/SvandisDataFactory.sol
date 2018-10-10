@@ -1,38 +1,19 @@
 pragma solidity ^0.4.23;
 
-import './IcoScreenerFactoryInterface.sol';
-import './TokenScreenerFactoryInterface.sol';
+import '../screeners/IcoScreener.sol';
+import '../screeners/TokenScreener.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
-contract SvandisDataFactory is TokenScreenerFactoryInterface, IcoScreenerFactoryInterface, Ownable {
-    address tokenScreenerFactoryAddress;
-    address icoScreenerFactoryAddress;
-
-    constructor (address _tokenScreenerFactory, address _icoScreenerFactory) public{
-        tokenScreenerFactoryAddress = _tokenScreenerFactory;
-        icoScreenerFactoryAddress = _icoScreenerFactory;
-    }
-
-    function setTokenScreenerFactoryAddress(address _tokenScreenerFactory) public onlyOwner returns (bool){
-        tokenScreenerFactoryAddress = _tokenScreenerFactory;
-        return true;
-    }
-
-    function setIcoScreenerFactoryAddress(address _icoScreenerFactory) public onlyOwner returns (bool){
-        icoScreenerFactoryAddress = _icoScreenerFactory;
-        return true;
-    }
-
+contract SvandisDataFactory is Ownable {
     function newTokenScreener(address _owner, string _name, bytes32 _ticker, string _website, bytes _dataLoad) public onlyOwner
     returns(address newContract) {
-        TokenScreenerFactoryInterface factory = TokenScreenerFactoryInterface(tokenScreenerFactoryAddress);
-        return factory.newTokenScreener(_owner, _name, _ticker, _website, _dataLoad);
+        TokenScreener screen = new TokenScreener(_owner, _name, _ticker, _website, _dataLoad);
+        return screen;
     }
 
     function newIcoScreener(address _owner, string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimestamp)
     public onlyOwner returns(address newContract) {
-        IcoScreenerFactoryInterface factory = IcoScreenerFactoryInterface(icoScreenerFactoryAddress);
-        return factory.newIcoScreener(_owner, _name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
+        return new IcoScreener(_owner, _name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
     }
 
 }
