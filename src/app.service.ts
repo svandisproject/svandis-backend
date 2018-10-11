@@ -14,9 +14,13 @@ export class AppService {
         this.contractsService.createNewUser();
         return 'Create new user';
     }
-    newSvandisData(createUserDto: SvandisDataDto): string {
+    newTokenScreener(svandisDataDto: SvandisDataDto): string {
         this.contractsService.createNewTokenScreener();
-        return 'Will create new svandis data';
+        return 'Will create new token screener';
+    }
+    newIcoScreener(svandisDataDto: SvandisDataDto): string {
+        this.contractsService.createNewIcoScreener();
+        return 'Will create new token screener';
     }
     updateSvandisData(svandisDataDto: SvandisDataDto): string {
         return 'Will update svandis data';

@@ -2,8 +2,6 @@
 
 const SvandisDataRegistry = artifacts.require('./SvandisDataRegistry.sol');
 const SvandisDataFactory = artifacts.require('./SvandisDataFactory.sol');
-const TokenScreenerFactory = artifacts.require('./TokenScreenerFactory.sol');
-const IcoScreenerFactory = artifacts.require('./IcoScreenerFactory.sol');
 const IcoScreener = artifacts.require('./IcoScreener.sol');
 const TokenScreener = artifacts.require('./TokenScreener.sol');
 
@@ -19,8 +17,6 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 
 	let svandisDataRegistry;
 	let svandisDataFactory;
-	let tokenScreenerFactory;
-	let icoScreenerFactory;
 	let name, ticker, website, dataLoad, tokenGenerationEventTimestamp;
 	let newDataLoad;
 
@@ -28,8 +24,6 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 	let icoScreener;
 
 	before(async function () {
-		tokenScreenerFactory = await TokenScreenerFactory.new();
-		icoScreenerFactory = await IcoScreenerFactory.new();
 
 		name = "Svandis";
 		ticker = 'SVN';
@@ -39,22 +33,13 @@ contract('SvandisDataRegistry', function ([owner, unknown]) {
 		newDataLoad = [0x21, 0x99, 0xdf];
 		tokenGenerationEventTimestamp = 1546300800;
 
-		svandisDataFactory = await SvandisDataFactory.new(tokenScreenerFactory.address, icoScreenerFactory.address);
-
-		await tokenScreenerFactory.transferOwnership(svandisDataFactory.address);
-		await icoScreenerFactory.transferOwnership(svandisDataFactory.address);
+		svandisDataFactory = await SvandisDataFactory.new();
 	});
 
 
 	it('should setup the svandis data registry', async function () {
 		svandisDataRegistry = await SvandisDataRegistry.new(svandisDataFactory.address).should.be.fulfilled;
 		await svandisDataFactory.transferOwnership(svandisDataRegistry.address).should.be.fulfilled;
-	});
-
-
-	it('should allow to change data registry address', async function () {
-		await svandisDataRegistry.setSvandisDataFactory(tokenScreenerFactory.address, {from: owner}).should.be.fulfilled;
-		await svandisDataRegistry.setSvandisDataFactory(svandisDataFactory.address, {from: owner}).should.be.fulfilled;
 	});
 
 

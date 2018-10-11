@@ -12,10 +12,16 @@ export class AppController {
         return this.appService.createUser(newUserDto);
     }
 
-    @Post('create-svandis-data')
-    async createSvandisData(@Body() svandisDataDto: SvandisDataDto) {
-        return this.appService.newSvandisData(svandisDataDto);
+    @Post('create-token-screener')
+    async createTokenScreener(@Body() svandisDataDto: SvandisDataDto) {
+        return this.appService.newTokenScreener(svandisDataDto);
     }
+
+    @Post('create-ico-screener')
+    async createIcoScreener(@Body() svandisDataDto: SvandisDataDto) {
+        return this.appService.newIcoScreener(svandisDataDto);
+    }
+
     @Post('update-svandis-data')
     async updateSvandisData(@Body() svandisDataDto: SvandisDataDto) {
         return this.appService.updateSvandisData(svandisDataDto);

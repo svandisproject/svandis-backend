@@ -46,7 +46,7 @@ module.exports = function(deployer) {
 								deployer.deploy(SvandisEcosystem, SvandisToken.address, SvandisDataRegistry.address, UserRegistry.address).then(function(instance){
 
 									// Transfer Ownership for the User Registry to the Ecosystem
-									UserRegistry.at(UserRegistry.address).transferOwnership(instance.address);
+									UserRegistry.at(UserRegistry.address).transferOwnership(config.ownerAddress);
 									SvandisDataRegistry.at(SvandisDataRegistry.address).transferOwnership(instance.address);
 									SvandisEcosystem.at(instance.address).transferOwnership(config.ownerAddress);
 									config.ecosystemAddress = instance.address;
