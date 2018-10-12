@@ -14,6 +14,10 @@ export class AppService {
         this.contractsService.createNewUser(createUserDto);
         return 'Create new user';
     }
+    createCentralizedUser(createUserDto: NewUserDto): string {
+        this.contractsService.createNewCentralizedUser(createUserDto);
+        return 'Create new centralized user';
+    }
     newTokenScreener(svandisDataDto: SvandisDataDto): string {
         this.contractsService.createNewTokenScreener(svandisDataDto);
         return 'Will create new token screener';

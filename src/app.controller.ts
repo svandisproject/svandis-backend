@@ -12,6 +12,11 @@ export class AppController {
         return this.appService.createUser(newUserDto);
     }
 
+    @Post('create-centralized-user')
+    async createCentralizedUser(@Body(new ValidationPipe({transform: true})) newUserDto: NewUserDto) {
+        return this.appService.createCentralizedUser(newUserDto);
+    }
+
     @Post('create-token-screener')
     async createTokenScreener(@Body() svandisDataDto: SvandisDataDto) {
         return this.appService.newTokenScreener(svandisDataDto);

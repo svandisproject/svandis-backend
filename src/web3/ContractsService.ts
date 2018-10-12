@@ -100,18 +100,63 @@ export class ContractsService {
             data: hashed2,
             uri: '',
         };
+        this._ecosystemContract.methods.createNewUser(
+            config.ownerAddress, config.ownerAddress,
+            [ attestation_1.claimType, attestation_2.claimType ],
+            [ attestation_1.issuer, attestation_2.issuer ],
+            attestation_1.signature + attestation_2.signature.slice(2),
+            attestation_1.data + attestation_2.data.slice(2),
+            [32, 32]).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+    }
+
+    async createNewCentralizedUser(newUser: NewUserDto) {
+        const data_text_1 = 'Verified Social';
+        const data_text_2 = 'Verified Kyc';
+        const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
+        const dataHash_2 = Web3.utils.asciiToHex(data_text_2);
+        const predictAddress = await this.predictIdentityAddress(config.ecosystemAddress);
+        const claimType_1 = 1;
+        const hashed = this._web3.utils.soliditySha3(predictAddress, claimType_1, dataHash_1);
+        const prvSigner1 = this._web3.utils.randomHex(32);
+        const signed = await this._web3.eth.accounts.sign(hashed, prvSigner1);
+        const claimType_2 = 2;
+        const prvSigner2 = this._web3.utils.randomHex(32);
+        const hashed2 = this._web3.utils.sha3(predictAddress, claimType_2, dataHash_2);
+        const signed2 = await this._web3.eth.accounts.sign(hashed2, prvSigner2);
+
+        const attestation_1 = {
+            claimType: claimType_1,
+            scheme: 1,
+            issuer: config.ownerAddress,
+            signature: signed.signature,
+            data: hashed,
+            uri: '',
+        };
+        const attestation_2 = {
+            claimType: claimType_2,
+            scheme: 1,
+            issuer:  config.ownerAddress,
+            signature: signed2.signature,
+            data: hashed2,
+            uri: '',
+        };
         this._ecosystemContract.methods.createNewCentralizedUser(
             config.ownerAddress,
-                [ attestation_1.claimType, attestation_2.claimType ],
-                [ attestation_1.issuer, attestation_2.issuer ],
-                attestation_1.signature + attestation_2.signature.slice(2),
-                attestation_1.data + attestation_2.data.slice(2),
-                [32, 32]).send({from: config.ownerAddress,
-                                gas: 3000000,
-                                gasPrice: '1'})
-                .then(function(receipt){
-                    console.log(receipt);
-                });
+            [ attestation_1.claimType, attestation_2.claimType ],
+            [ attestation_1.issuer, attestation_2.issuer ],
+            attestation_1.signature + attestation_2.signature.slice(2),
+            attestation_1.data + attestation_2.data.slice(2),
+            [32, 32]).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
     }
 
     async predictIdentityAddress(wallet) {
