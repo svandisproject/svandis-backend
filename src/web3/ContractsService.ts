@@ -13,8 +13,8 @@ import {from} from 'rxjs';
 
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {SvandisDataDto} from "../data_models/SvandisData.dto";
-import {NewUserDto} from "../data_models/NewUser.dto";
+import {SvandisDataDto} from '../data_models/SvandisData.dto';
+import {NewUserDto} from '../data_models/NewUser.dto';
 
 @Injectable()
 export class ContractsService {
@@ -190,7 +190,29 @@ export class ContractsService {
 
     public removeUser(user: NewUserDto) {
         this._ecosystemContract.methods.removeUser (config.ownerAddress,
-            ).send({from: config.ownerAddress,
+        ).send({from: config.ownerAddress,
+            gas: 1000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+    }
+
+    public swapCentralizedUserRecovery(user: NewUserDto) {
+        this._ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts (
+            config.ownerAddress,
+            config.ownerAddress).send({from: config.ownerAddress,
+            gas: 2000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+    }
+
+    public addExtraKeyForSvandisCentralizedUserAccounts(user: NewUserDto) {
+        this._ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts (
+            config.ownerAddress,
+            config.ecosystemAddress).send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
             .then(function(receipt){

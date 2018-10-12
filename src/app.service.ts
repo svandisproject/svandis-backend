@@ -32,6 +32,14 @@ export class AppService {
     }
     removeUser(createUserDto): string {
         this.contractsService.removeUser(createUserDto);
-        return 'Will update svandis data';
+        return 'Will remove user';
+    }
+    swapCentralizedUserRecovery(createUserDto): string {
+        this.contractsService.swapCentralizedUserRecovery(createUserDto);
+        return 'Will swap centralized user';
+    }
+    addExtraKeyForSvandisCentralizedUserAccounts(createUserDto): string {
+        this.contractsService.addExtraKeyForSvandisCentralizedUserAccounts(createUserDto);
+        return 'Will add extra key to centralized accounts';
     }
 }

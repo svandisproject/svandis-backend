@@ -37,4 +37,13 @@ export class AppController {
         return this.appService.updateSvandisData(svandisDataDto);
     }
 
+    @Post('swap-centralized-recovery')
+    async swapCentralizedRecoveryMethod(@Body() svandisDataDto: SvandisDataDto) {
+        return this.appService.swapCentralizedUserRecovery(svandisDataDto);
+    }
+
+    @Post('add-new-recovery')
+    async addExtraKeyForSvandisCentralizedUserAccounts(@Body() svandisDataDto: SvandisDataDto) {
+        return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(svandisDataDto);
+    }
 }
