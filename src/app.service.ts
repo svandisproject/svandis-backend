@@ -30,4 +30,8 @@ export class AppService {
         this.contractsService.updateScreener(svandisDataDto);
         return 'Will update svandis data';
     }
+    removeUser(createUserDto): string {
+        this.contractsService.removeUser(createUserDto);
+        return 'Will update svandis data';
+    }
 }

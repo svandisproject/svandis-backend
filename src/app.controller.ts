@@ -8,12 +8,12 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
     @Post('create-user')
-    async createUser(@Body(new ValidationPipe({transform: true})) newUserDto: NewUserDto) {
+    async createUser(@Body() newUserDto: NewUserDto) {
         return this.appService.createUser(newUserDto);
     }
 
     @Post('create-centralized-user')
-    async createCentralizedUser(@Body(new ValidationPipe({transform: true})) newUserDto: NewUserDto) {
+    async createCentralizedUser(@Body() newUserDto: NewUserDto) {
         return this.appService.createCentralizedUser(newUserDto);
     }
 
@@ -29,6 +29,11 @@ export class AppController {
 
     @Post('update-svandis-data')
     async updateSvandisData(@Body() svandisDataDto: SvandisDataDto) {
+        return this.appService.updateSvandisData(svandisDataDto);
+    }
+
+    @Post('remove-user')
+    async removeUser(@Body() svandisDataDto: SvandisDataDto) {
         return this.appService.updateSvandisData(svandisDataDto);
     }
 

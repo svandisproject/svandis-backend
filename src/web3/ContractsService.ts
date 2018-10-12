@@ -187,4 +187,14 @@ export class ContractsService {
                 console.log(receipt);
             });
     }
+
+    public removeUser(user: NewUserDto) {
+        this._ecosystemContract.methods.removeUser (config.ownerAddress,
+            ).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+    }
 }
