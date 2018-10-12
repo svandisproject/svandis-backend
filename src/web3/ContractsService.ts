@@ -44,7 +44,7 @@ export class ContractsService {
             gas: 1500000,
             gasPrice: '1'}).
         then(function(receipt){
-            console.log(receipt);
+            console.log(receipt.events.Created);
         });
     }
 
@@ -62,8 +62,8 @@ export class ContractsService {
             from: config.ownerAddress,
             gas: 1500000,
             gasPrice: '1'}).
-        then(function(receipt){
-            console.log(receipt);
+        then(function(receipt, result, err){
+            console.log(receipt.events.Created);
         });
     }
 
@@ -121,5 +121,23 @@ export class ContractsService {
         const address =
             '0x' + this._web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66);
         return address.toString();
+    }
+
+    public updateScreener() {
+        const _dataAddress = '0x0Ce2c1ef3bF5F41d20Af3e12071db1c4aF66d629';
+        const _newData = [0x67, 0x12, 0xff];
+        const _consensusUsers = [config.ownerAddress];
+        const _consensusUserNewRatings = [1];
+        const _metConsensus = [true];
+        this._ecosystemContract.methods.updateSvandisData (_dataAddress,
+            _newData,
+            _consensusUsers,
+            _consensusUserNewRatings,
+            _metConsensus).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
     }
 }

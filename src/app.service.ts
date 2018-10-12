@@ -23,6 +23,7 @@ export class AppService {
         return 'Will create new token screener';
     }
     updateSvandisData(svandisDataDto: SvandisDataDto): string {
+        this.contractsService.updateScreener();
         return 'Will update svandis data';
     }
 }
