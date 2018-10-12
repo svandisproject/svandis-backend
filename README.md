@@ -1,37 +1,63 @@
-# svandis-backend
-Backend Blockchain Smart Contracts
+## Description
 
-This project is in development. It contains smart contracts needed to administer a Token Screener submission system, with rating on an identity contract. It is decentralized first, but is modified for Svandis to act as a recovery wallet and claim submitter for beginner users. As this project conforms with EIP 725 and 735, the user will be in full control of their key and therefore their data. The claims that are to be added to users identities will be KYC and social media claim related at first.
+This project is a server component based on the [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-### Installation
+It comprises of smart contracts created by the Svandis organization with the purpose of creating more transparency in the blockchain industry.
+
+### Identity
+
+Within this project is an implementation of ERC 725/735 Identity Standards. These contracts are a fork of the [Origin.js](https://github.com/OriginProtocol/origin-js) project, and have been modified to meet the needs of offloading all gas costs onto the Svandis organization on behalf of it's decentralized research community. Svandis will act as an optional trusted partner for beginners as key management, and expert users will be able to take full control of their on chain identity.
+
+###Data Signing
+
+The purpose for this backend project is for collecting signed pieces of data from users meeting consensus with eachother, and submitting these signed data hashed as public proof that a member of the research community attested to a change in the Svandis database. In such, each time a screener for instance is changed in the database due to a consensus between users, the state of the database will be reflected onto the blockchain with their signatures confirming these decentralized attestations. As Svandis and Blockchain technology evolves, this process will move further onto the blockchain. For the time being, Svandis is responsible for providing random consensus and publically sharing the signed data hashes created by the research community as they curate the screeners.
+
+## Installation
 
 This project will need the latest Node.js set up on the machine. You should also have ganache installed. After cloning the project run:
 
   `npm install`
 
-### Compilation
+##Smart Contract Building and Testing
 
-To compile these smart contracts in truffle (Check truffle.js for your deployment options) :
+```truffle compile```
 
-  `truffle develop`
+Compile Smart Contracts
 
-  `truffle compile`
+```truffle test```
 
-### Migration
+Run Truffle Javascript Tests
 
-To migrate these smart contracts in truffle (modify truffle.js for migration setup):
+```truffle migrate```
 
-  `truffle migrate`
+Deploy the files to your configured RPC connection with truffle migrate. This is necessary to use the API with calls to smart contracts.
 
+## Running the app
 
-### Tests
+```bash
+# development
+$ npm run start
 
-To run any javascript tests attached to this repository: 
+# watch mode
+$ npm run start:dev
 
-  `truffle test`
-  
- ### Credits
- 
-For identity management EIP 725 and 735, we chose to take an approach similar to the Origin Js Protocol Projet. This was modified to meet the needs of a centralized key management and decentralized expert options.
+# incremental rebuild (webpack)
+$ npm run webpack
+$ npm run start:hmr
 
+# production mode
+$ npm run start:prod
+```
 
+## Nest js Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
