@@ -13,6 +13,8 @@ import {from} from 'rxjs';
 
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {SvandisDataDto} from "../data_models/SvandisData.dto";
+import {NewUserDto} from "../data_models/NewUser.dto";
 
 @Injectable()
 export class ContractsService {
@@ -31,7 +33,7 @@ export class ContractsService {
         this._account = accountAddress;
     }
 
-    public  createNewTokenScreener() {
+    public  createNewTokenScreener(svandisData: SvandisDataDto) {
         const name = 'Svandis';
         const ticker = 'SVN';
         const website = 'https://svandis.io';
@@ -48,7 +50,7 @@ export class ContractsService {
         });
     }
 
-    public  createNewIcoScreener() {
+    public  createNewIcoScreener(svandisData: SvandisDataDto) {
         const name = 'Svandis';
         const ticker = 'SVN';
         const website = 'https://svandis.io';
@@ -67,7 +69,7 @@ export class ContractsService {
         });
     }
 
-    async createNewUser() {
+    async createNewUser(newUser: NewUserDto) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -123,7 +125,7 @@ export class ContractsService {
         return address.toString();
     }
 
-    public updateScreener() {
+    public updateScreener(svandisData: SvandisDataDto) {
         const _dataAddress = '0x0Ce2c1ef3bF5F41d20Af3e12071db1c4aF66d629';
         const _newData = [0x67, 0x12, 0xff];
         const _consensusUsers = [config.ownerAddress];

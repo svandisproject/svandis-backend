@@ -11,19 +11,19 @@ export class AppService {
       return 'This is the Svandis Backend!';
     }
     createUser(createUserDto: NewUserDto): string {
-        this.contractsService.createNewUser();
+        this.contractsService.createNewUser(createUserDto);
         return 'Create new user';
     }
     newTokenScreener(svandisDataDto: SvandisDataDto): string {
-        this.contractsService.createNewTokenScreener();
+        this.contractsService.createNewTokenScreener(svandisDataDto);
         return 'Will create new token screener';
     }
     newIcoScreener(svandisDataDto: SvandisDataDto): string {
-        this.contractsService.createNewIcoScreener();
+        this.contractsService.createNewIcoScreener(svandisDataDto);
         return 'Will create new token screener';
     }
     updateSvandisData(svandisDataDto: SvandisDataDto): string {
-        this.contractsService.updateScreener();
+        this.contractsService.updateScreener(svandisDataDto);
         return 'Will update svandis data';
     }
 }
