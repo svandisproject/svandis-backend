@@ -5,8 +5,14 @@ import * as RLP from 'rlp';
 declare let require: any;
 import * as EcosystemAbi from '../../../build/contracts/SvandisEcosystem.json';
 import {Injectable} from '@nestjs/common';
-import {SvandisDataDto} from '../data_models/SvandisData.dto';
-import {NewUserDto} from '../data_models/NewUser.dto';
+import {NewIcoDto} from '../data_models/NewIcoDto';
+import {BlockchainUserDto} from '../data_models/BlockchainUserDto';
+import {NewTokenDto} from '../data_models/NewTokenDto';
+import {CentralizedBlockchainUserDto} from '../data_models/CentralizedBlockchainUserDto';
+import {UpdateScreenerDto} from '../data_models/UpdateScreenerDto';
+import {UserRemovalDto} from '../data_models/UserRemovalDto';
+import {SwapRecoveryCentralizedDto} from '../data_models/SwapRecoveryCentralizedDto';
+import {AddExtraRecoveryCentralizedDto} from '../data_models/AddExtraRecoveryCentralizedDto';
 
 @Injectable()
 export class ContractsService {
@@ -25,7 +31,7 @@ export class ContractsService {
         this.account = accountAddress;
     }
 
-    public  createNewTokenScreener(svandisData: SvandisDataDto) {
+    public  createNewTokenScreener(svandisData: NewTokenDto) {
         const name = 'Svandis';
         const ticker = 'SVN';
         const website = 'https://svandis.io';
@@ -42,7 +48,7 @@ export class ContractsService {
         });
     }
 
-    public  createNewIcoScreener(svandisData: SvandisDataDto) {
+    public  createNewIcoScreener(svandisData: NewIcoDto) {
         const name = 'Svandis';
         const ticker = 'SVN';
         const website = 'https://svandis.io';
@@ -61,7 +67,7 @@ export class ContractsService {
         });
     }
 
-    async createNewUser(newUser: NewUserDto) {
+    async createNewUser(newUser: BlockchainUserDto) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -106,7 +112,7 @@ export class ContractsService {
             });
     }
 
-    async createNewCentralizedUser(newUser: NewUserDto) {
+    async createNewCentralizedUser(newUser: CentralizedBlockchainUserDto) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -162,7 +168,7 @@ export class ContractsService {
         return address.toString();
     }
 
-    public updateScreener(svandisData: SvandisDataDto) {
+    public updateScreener(svandisData: UpdateScreenerDto) {
         const dataAddress = '0x0Ce2c1ef3bF5F41d20Af3e12071db1c4aF66d629';
         const newData = [0x67, 0x12, 0xff];
         const consensusUsers = [config.ownerAddress];
@@ -180,7 +186,7 @@ export class ContractsService {
             });
     }
 
-    public removeUser(user: NewUserDto) {
+    public removeUser(user: UserRemovalDto) {
         this.ecosystemContract.methods.removeUser (config.ownerAddress,
         ).send({from: config.ownerAddress,
             gas: 1000000,
@@ -190,7 +196,7 @@ export class ContractsService {
             });
     }
 
-    public swapCentralizedUserRecovery(user: NewUserDto) {
+    public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto) {
         this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts (
             config.ownerAddress,
             config.ownerAddress).send({from: config.ownerAddress,
@@ -201,10 +207,10 @@ export class ContractsService {
             });
     }
 
-    public addExtraKeyForSvandisCentralizedUserAccounts(user: NewUserDto) {
+    public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraRecoveryCentralizedDto) {
         this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts (
             config.ownerAddress,
-            config.ecosystemAddress).send({from: config.ownerAddress,
+            '0x281055afc982d96fab65b3a49cac8b878184cb16').send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
             .then(function(receipt){

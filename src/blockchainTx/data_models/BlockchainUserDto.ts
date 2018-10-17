@@ -1,6 +1,6 @@
 import { IsString, IsInt } from 'class-validator';
 
-export class NewUserDto {
+export class BlockchainUserDto {
     @IsString()
     readonly dataSignature: string;
 

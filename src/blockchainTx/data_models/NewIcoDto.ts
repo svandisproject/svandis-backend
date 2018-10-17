@@ -1,6 +1,6 @@
 import { IsString, IsInt } from 'class-validator';
 
-export class SvandisDataDto {
+export class NewIcoDto {
     @IsString()
     readonly datasignature: string;
 
