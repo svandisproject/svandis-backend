@@ -1,11 +1,11 @@
 import {Controller, Get, Post, Body, Req, Res, Param, ValidationPipe} from '@nestjs/common';
-import { AppService } from './app.service';
+import { BlockchainTxService } from './BlockchainTxService';
 import {NewUserDto} from './data_models/NewUser.dto';
 import {SvandisDataDto} from './data_models/SvandisData.dto';
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class BlockchainTxController {
+  constructor(private readonly appService: BlockchainTxService) {}
 
     @Post('create-user')
     async createUser(@Body() newUserDto: NewUserDto) {

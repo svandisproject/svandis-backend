@@ -5,7 +5,7 @@ import {SvandisDataDto} from './data_models/SvandisData.dto';
 import {ContractsService} from './web3/ContractsService';
 
 @Injectable()
-export class AppService {
+export class BlockchainTxService {
     constructor(private contractsService: ContractsService){}
     root(): string {
       return 'This is the Svandis Backend!';

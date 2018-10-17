@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './AppController';
+import { AppService } from './AppService';
 
-describe('AppController', () => {
+describe('BlockchainTxController', () => {
   let app: TestingModule;
 
   beforeAll(async () => {

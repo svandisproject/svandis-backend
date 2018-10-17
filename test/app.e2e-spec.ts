@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/AppModule';
 
-describe('AppController (e2e)', () => {
+describe('BlockchainTxController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
