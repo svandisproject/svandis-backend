@@ -2,12 +2,12 @@ import {Controller, Get, Post, Body, Req, Res, Param, ValidationPipe} from '@nes
 import { BlockchainTxService } from './BlockchainTxService';
 import {BlockchainUserDto} from './data_models/BlockchainUserDto';
 import {NewIcoDto} from './data_models/NewIcoDto';
-import {CentralizedBlockchainUserDto} from "./data_models/CentralizedBlockchainUserDto";
-import {NewTokenDto} from "./data_models/NewTokenDto";
-import {UpdateScreenerDto} from "./data_models/UpdateScreenerDto";
-import {UserRemovalDto} from "./data_models/UserRemovalDto";
-import {SwapRecoveryCentralizedDto} from "./data_models/SwapRecoveryCentralizedDto";
-import {AddExtraRecoveryCentralizedDto} from "./data_models/AddExtraRecoveryCentralizedDto";
+import {CentralizedBlockchainUserDto} from './data_models/CentralizedBlockchainUserDto';
+import {NewTokenDto} from './data_models/NewTokenDto';
+import {UpdateScreenerDto} from './data_models/UpdateScreenerDto';
+import {UserRemovalDto} from './data_models/UserRemovalDto';
+import {SwapRecoveryCentralizedDto} from './data_models/SwapRecoveryCentralizedDto';
+import {AddExtraRecoveryCentralizedDto} from './data_models/AddExtraRecoveryCentralizedDto';
 
 @Controller()
 export class BlockchainTxController {

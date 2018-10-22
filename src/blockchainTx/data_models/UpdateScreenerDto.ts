@@ -2,14 +2,9 @@ import { IsString, IsInt } from 'class-validator';
 
 export class UpdateScreenerDto {
     @IsString()
-    readonly datasignature: string;
-
-    @IsInt()
-    readonly svandisDataIndex: number;
+    readonly dataAddress: string;
 
     @IsString()
-    readonly projectName: string;
+    readonly newDataLoad: string;
 
-    @IsInt()
-    readonly projectWebsite: string;
 }

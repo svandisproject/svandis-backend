@@ -2,7 +2,7 @@ import { IsString, IsInt } from 'class-validator';
 
 export class AddExtraRecoveryCentralizedDto {
     @IsString()
-    readonly address: string;
+    readonly currentAddress: string;
 
     @IsString()
     readonly newRecoveryMethod: string;

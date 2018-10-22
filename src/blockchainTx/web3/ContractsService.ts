@@ -32,10 +32,10 @@ export class ContractsService {
     }
 
     public  createNewTokenScreener(svandisData: NewTokenDto) {
-        const name = 'Svandis';
-        const ticker = 'SVN';
+        const name = svandisData.projectName;
+        const ticker = svandisData.ticker;
         const website = 'https://svandis.io';
-        const dataLoad = [0x76, 0x22, 0x2a];
+        const dataLoad = svandisData.dataLoad; // [0x76, 0x22, 0x2a];
         this.ecosystemContract.methods.createNewTokenScreener( name,
             this.web3.utils.asciiToHex(ticker),
             website,
@@ -49,11 +49,11 @@ export class ContractsService {
     }
 
     public  createNewIcoScreener(svandisData: NewIcoDto) {
-        const name = 'Svandis';
-        const ticker = 'SVN';
+        const name = svandisData.projectName;
+        const ticker = svandisData.ticker;
         const website = 'https://svandis.io';
-        const dataLoad = [0x76, 0x22, 0x2a];
-        const tokenGenerationEventTimestamp = 1546300800;
+        const dataLoad = svandisData.dataLoad;
+        const tokenGenerationEventTimestamp = svandisData.unixTokenGenerationTimestamp;
         this.ecosystemContract.methods.createNewIcoScreener( name,
             this.web3.utils.asciiToHex(ticker),
             website,
@@ -99,7 +99,7 @@ export class ContractsService {
             uri: '',
         };
         this.ecosystemContract.methods.createNewUser(
-            config.ownerAddress, config.ownerAddress,
+            newUser.userAddress, newUser.recoveryAddress,
             [ attestation_1.claimType, attestation_2.claimType ],
             [ attestation_1.issuer, attestation_2.issuer ],
             attestation_1.signature + attestation_2.signature.slice(2),
@@ -144,7 +144,7 @@ export class ContractsService {
             uri: '',
         };
         this.ecosystemContract.methods.createNewCentralizedUser(
-            config.ownerAddress,
+            newUser.userAddress,
             [ attestation_1.claimType, attestation_2.claimType ],
             [ attestation_1.issuer, attestation_2.issuer ],
             attestation_1.signature + attestation_2.signature.slice(2),
@@ -169,8 +169,8 @@ export class ContractsService {
     }
 
     public updateScreener(svandisData: UpdateScreenerDto) {
-        const dataAddress = '0x0Ce2c1ef3bF5F41d20Af3e12071db1c4aF66d629';
-        const newData = [0x67, 0x12, 0xff];
+        const dataAddress = svandisData.dataAddress;
+        const newData = svandisData.newDataLoad;
         const consensusUsers = [config.ownerAddress];
         const consensusUserNewRatings = [1];
         const metConsensus = [true];
@@ -187,7 +187,7 @@ export class ContractsService {
     }
 
     public removeUser(user: UserRemovalDto) {
-        this.ecosystemContract.methods.removeUser (config.ownerAddress,
+        this.ecosystemContract.methods.removeUser (user.userAddressForRemoval,
         ).send({from: config.ownerAddress,
             gas: 1000000,
             gasPrice: '1'})
@@ -198,8 +198,8 @@ export class ContractsService {
 
     public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto) {
         this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts (
-            config.ownerAddress,
-            config.ownerAddress).send({from: config.ownerAddress,
+            user.currentAddress,
+            user.newRecoveryAddress).send({from: config.ownerAddress,
             gas: 2000000,
             gasPrice: '1'})
             .then(function(receipt){
@@ -209,8 +209,7 @@ export class ContractsService {
 
     public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraRecoveryCentralizedDto) {
         this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts (
-            config.ownerAddress,
-            '0x281055afc982d96fab65b3a49cac8b878184cb16').send({from: config.ownerAddress,
+            user.currentAddress, user.newRecoveryMethod).send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
             .then(function(receipt){
