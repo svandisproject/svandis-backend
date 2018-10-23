@@ -27,14 +27,10 @@ export class ContractsService {
             this.ecosystemContract.setProvider(this.web3.currentProvider);
     }
 
-    updateAccount(accountAddress: string){
-        this.account = accountAddress;
-    }
-
     public  createNewTokenScreener(svandisData: NewTokenDto) {
         const name = svandisData.projectName;
         const ticker = svandisData.ticker;
-        const website = 'https://svandis.io';
+        const website = svandisData.projectWebsite;
         const dataLoad = svandisData.dataLoad; // [0x76, 0x22, 0x2a];
         this.ecosystemContract.methods.createNewTokenScreener( name,
             this.web3.utils.asciiToHex(ticker),
@@ -51,7 +47,7 @@ export class ContractsService {
     public  createNewIcoScreener(svandisData: NewIcoDto) {
         const name = svandisData.projectName;
         const ticker = svandisData.ticker;
-        const website = 'https://svandis.io';
+        const website = svandisData.projectWebsite;
         const dataLoad = svandisData.dataLoad;
         const tokenGenerationEventTimestamp = svandisData.unixTokenGenerationTimestamp;
         this.ecosystemContract.methods.createNewIcoScreener( name,
