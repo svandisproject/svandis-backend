@@ -21,10 +21,10 @@ export class ContractsService {
     private ecosystemContract: any;
 
     constructor() {
-            const hd = new HDWalletProvider(config.mnemonic, config.rpc);
-            this.web3 = new Web3(hd);
-            this.ecosystemContract = new this.web3.eth.Contract(EcosystemAbi.abi, config.ecosystemAddress);
-            this.ecosystemContract.setProvider(this.web3.currentProvider);
+        const hd = new HDWalletProvider(config.mnemonic, config.rpc);
+        this.web3 = new Web3(hd);
+        this.ecosystemContract = new this.web3.eth.Contract(EcosystemAbi.abi, config.ecosystemAddress);
+        this.ecosystemContract.setProvider(this.web3.currentProvider);
     }
 
     public  createNewTokenScreener(svandisData: NewTokenDto) {
@@ -50,7 +50,7 @@ export class ContractsService {
         const website = svandisData.projectWebsite;
         const dataLoad = svandisData.dataLoad;
         const tokenGenerationEventTimestamp = svandisData.unixTokenGenerationTimestamp;
-        this.ecosystemContract.methods.createNewIcoScreener( name,
+        this.ecosystemContract.methods.createNewIcoScreener(name,
             this.web3.utils.asciiToHex(ticker),
             website,
             dataLoad,
@@ -170,7 +170,7 @@ export class ContractsService {
         const consensusUsers = [config.ownerAddress];
         const consensusUserNewRatings = [1];
         const metConsensus = [true];
-        this.ecosystemContract.methods.updateSvandisData (dataAddress,
+        this.ecosystemContract.methods.updateSvandisData(dataAddress,
             newData,
             consensusUsers,
             consensusUserNewRatings,
@@ -183,8 +183,8 @@ export class ContractsService {
     }
 
     public removeUser(user: UserRemovalDto) {
-        this.ecosystemContract.methods.removeUser (user.userAddressForRemoval,
-        ).send({from: config.ownerAddress,
+        this.ecosystemContract.methods.removeUser(
+            user.userAddressForRemoval).send({from: config.ownerAddress,
             gas: 1000000,
             gasPrice: '1'})
             .then(function(receipt){
@@ -193,7 +193,7 @@ export class ContractsService {
     }
 
     public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto) {
-        this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts (
+        this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts(
             user.currentAddress,
             user.newRecoveryAddress).send({from: config.ownerAddress,
             gas: 2000000,
@@ -204,7 +204,7 @@ export class ContractsService {
     }
 
     public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraRecoveryCentralizedDto) {
-        this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts (
+        this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts(
             user.currentAddress, user.newRecoveryMethod).send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
