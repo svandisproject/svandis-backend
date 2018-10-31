@@ -19,6 +19,7 @@ export class ContractsService {
     private web3: any;
     public account: any;
     private ecosystemContract: any;
+    private readonly SIGN_NEW_USER = 'CREATE NEW ACCOUNT';
 
     constructor() {
         const hd = new HDWalletProvider(config.mnemonic, config.rpc);
@@ -95,7 +96,7 @@ export class ContractsService {
             uri: '',
         };
         this.ecosystemContract.methods.createNewUser(
-            newUser.userAddress, newUser.recoveryAddress,
+            this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature), newUser.recoveryAddress,
             [ attestation_1.claimType, attestation_2.claimType ],
             [ attestation_1.issuer, attestation_2.issuer ],
             attestation_1.signature + attestation_2.signature.slice(2),
@@ -139,8 +140,10 @@ export class ContractsService {
             data: hashed2,
             uri: '',
         };
+
+        console.log(newUser.userAddressSignature);
         this.ecosystemContract.methods.createNewCentralizedUser(
-            newUser.userAddress,
+            this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature),
             [ attestation_1.claimType, attestation_2.claimType ],
             [ attestation_1.issuer, attestation_2.issuer ],
             attestation_1.signature + attestation_2.signature.slice(2),

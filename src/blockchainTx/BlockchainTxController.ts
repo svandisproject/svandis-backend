@@ -13,23 +13,23 @@ import {AddExtraRecoveryCentralizedDto} from './data_models/AddExtraRecoveryCent
 export class BlockchainTxController {
   constructor(private readonly appService: BlockchainTxService) {}
 
-    @Post('create-user')
-    async createUser(@Body() newUserDto: BlockchainUserDto) {
+    @Post('blockchain-user')
+    async blockchainUser(@Body() newUserDto: BlockchainUserDto) {
         return this.appService.createUser(newUserDto);
     }
 
-    @Post('create-centralized-user')
-    async createCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto) {
+    @Post('blockchain-centralized-user')
+    async blockchainCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto) {
         return this.appService.createCentralizedUser(newUserDto);
     }
 
-    @Post('create-token-screener')
-    async createTokenScreener(@Body() svandisDataDto: NewTokenDto) {
+    @Post('token-screener')
+    async tokenScreener(@Body() svandisDataDto: NewTokenDto) {
         return this.appService.newTokenScreener(svandisDataDto);
     }
 
-    @Post('create-ico-screener')
-    async createIcoScreener(@Body() svandisDataDto: NewIcoDto) {
+    @Post('ico-screener')
+    async icoScreener(@Body() svandisDataDto: NewIcoDto) {
         return this.appService.newIcoScreener(svandisDataDto);
     }
 

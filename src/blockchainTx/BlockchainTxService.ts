@@ -18,34 +18,58 @@ export class BlockchainTxService {
     }
     createUser(createUserDto: BlockchainUserDto): string {
         this.contractsService.createNewUser(createUserDto);
-        return 'Create new user';
+        const data = {
+            response: 'Created new blockchain user',
+        };
+        return JSON.stringify(data);
     }
     createCentralizedUser(createUserDto: CentralizedBlockchainUserDto): string {
         this.contractsService.createNewCentralizedUser(createUserDto);
-        return 'Create new centralized user';
+        const data = {
+            response: 'Created new centralized blockchain user',
+        };
+        return JSON.stringify(data);
     }
     newTokenScreener(svandisDataDto: NewTokenDto): string {
         this.contractsService.createNewTokenScreener(svandisDataDto);
-        return 'Will create new token screener';
+        const data = {
+            response: 'Will create new token screener',
+        };
+        return JSON.stringify(data);
     }
     newIcoScreener(svandisDataDto: NewIcoDto): string {
         this.contractsService.createNewIcoScreener(svandisDataDto);
-        return 'Will create new token screener';
+        const data = {
+            response: 'Will create new token screener',
+        };
+        return JSON.stringify(data);
     }
     updateSvandisData(updateScreener: UpdateScreenerDto): string {
         this.contractsService.updateScreener(updateScreener);
-        return 'Will update svandis data';
+        const data = {
+            response: 'Will update svandis data',
+        };
+        return JSON.stringify(data);
     }
     removeUser(removeUserDto: UserRemovalDto): string {
         this.contractsService.removeUser(removeUserDto);
-        return 'Will remove user';
+        const data = {
+            response: 'Will remove user',
+        };
+        return JSON.stringify(data);
     }
     swapCentralizedUserRecovery(swapRecoveryCentralized: SwapRecoveryCentralizedDto): string {
         this.contractsService.swapCentralizedUserRecovery(swapRecoveryCentralized);
-        return 'Will swap centralized user';
+        const data = {
+            response: 'Will swap centralized user',
+        };
+        return JSON.stringify(data);
     }
     addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery: AddExtraRecoveryCentralizedDto): string {
         this.contractsService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery);
-        return 'Will add extra key to centralized accounts';
+        const data = {
+            response: 'Will add extra key to centralized accounts',
+        };
+        return JSON.stringify(data);
     }
 }
