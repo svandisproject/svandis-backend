@@ -1,12 +1,14 @@
 import { Global, Module } from '@nestjs/common';
-import { BlockchainTxController } from './BlockchainTxController';
-import { BlockchainTxService } from './BlockchainTxService';
+import { BlockchainUsersTxController } from './BlockchainUsersTxController';
+import { BlockchainScreenersTxController } from './BlockchainScreenersTxController';
+import { BlockchainUsersTxService } from './BlockchainUsersTxService';
 import {ContractsService} from './web3/ContractsService';
+import {BlockchainScreenersTxService} from './BlockchainScreenersTxService';
 
 @Global()
 @Module({
   imports: [],
-  controllers: [BlockchainTxController],
-  providers: [BlockchainTxService, ContractsService],
+  controllers: [BlockchainUsersTxController, BlockchainScreenersTxController],
+  providers: [BlockchainUsersTxService, BlockchainScreenersTxService, ContractsService],
 })
 export class BlockchainTxModule {}
