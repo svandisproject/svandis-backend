@@ -19,39 +19,44 @@ module.exports = function(deployer) {
 				// Create a new Svandis Data Registry
 				deployer.deploy(SvandisDataRegistry, instance.address).then(function(instance){
 					// Transfer Ownership the Svandis Data Registry to the Svandis Data Factory
-					SvandisDataFactory.at(SvandisDataFactory.address).transferOwnership(instance.address);
+					SvandisDataFactory.at(SvandisDataFactory.address).transferOwnership(instance.address).then(function(){
 
 					//Create the Svandis Token
-					deployer.deploy(SvandisToken);
+						deployer.deploy(SvandisToken).then(function(){
 
 					// Create the KeyHolderLibrary Contract
-					deployer.deploy(KeyHolderLibrary).then(function(){
+							deployer.deploy(KeyHolderLibrary).then(function(){
 						// Link the KeyHolder Library Contract to the ClaimHolder Library ABI's
-						deployer.link(KeyHolderLibrary, ClaimHolderLibrary);
+								deployer.link(KeyHolderLibrary, ClaimHolderLibrary);
 
 						// Create the the Claim Holder Library
-						deployer.deploy(ClaimHolderLibrary).then(function(){
+								deployer.deploy(ClaimHolderLibrary).then(function(){
 							// Link the Ecosystem ABI to the KeyHolder Library and Claim Holder Library ABI's
-							deployer.link(ClaimHolderLibrary, SvandisEcosystem);
-							deployer.link(KeyHolderLibrary, SvandisEcosystem);
+									deployer.link(ClaimHolderLibrary, SvandisEcosystem);
+									deployer.link(KeyHolderLibrary, SvandisEcosystem);
 
 							// Link the ClaimHolderPresigned ABI to the KeyHolder Library and Claim Holder Library ABI's
-							deployer.link(ClaimHolderLibrary, ClaimHolderPresigned);
-							deployer.link(KeyHolderLibrary, ClaimHolderPresigned);
+									deployer.link(ClaimHolderLibrary, ClaimHolderPresigned);
+									deployer.link(KeyHolderLibrary, ClaimHolderPresigned);
 
 							// Create the User Registry
-							deployer.deploy(UserRegistry).then(function(){
+									deployer.deploy(UserRegistry).then(function(){
 
 								// Create the Ecosystem
-								deployer.deploy(SvandisEcosystem, SvandisToken.address, SvandisDataRegistry.address, UserRegistry.address).then(function(instance){
+										deployer.deploy(SvandisEcosystem, SvandisToken.address, SvandisDataRegistry.address, UserRegistry.address).then(function(instance){
 
-									// Transfer Ownership for the User Registry to the Ecosystem
-									UserRegistry.at(UserRegistry.address).transferOwnership(config.ownerAddress);
-									SvandisDataRegistry.at(SvandisDataRegistry.address).transferOwnership(instance.address);
-									SvandisEcosystem.at(instance.address).transferOwnership(config.ownerAddress);
-									config.ecosystemAddress = instance.address;
-									fs.writeFileSync('./test-config.json', JSON.stringify(config), function(err) {
-										if (err) console.log("Error while adding Deployed Ecosystem Address" + err);
+											// Transfer Ownership for the User Registry to the Ecosystem
+											UserRegistry.at(UserRegistry.address).transferOwnership(config.ownerAddress).then(function(){
+												SvandisDataRegistry.at(SvandisDataRegistry.address).transferOwnership(instance.address).then(function(){
+													SvandisEcosystem.at(instance.address).transferOwnership(config.ownerAddress).then(function(){
+														config.ecosystemAddress = instance.address;
+														fs.writeFileSync('./test-config.json', JSON.stringify(config), function(err) {
+															if (err) console.log("Error while adding Deployed Ecosystem Address" + err);
+														});
+													});
+												});
+											});
+										});
 									});
 								});
 							});

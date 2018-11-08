@@ -23,7 +23,7 @@ module.exports = {
 				return new HDWalletProvider(config.mnemonic, config.rpc, 0, 3)
 			},
 			network_id: 42,
-			gas: 6500000, // <-- Use this high gas value
+			gas: 7500000,
 			gasPrice: 0x05
 		},
 	/*	ledger_kovan: {
@@ -31,7 +31,7 @@ module.exports = {
 				{
 					//Ledger Options
 					networkId: 42,
-					accountsOffset: 0, // we use the first address
+					accountsOffset: 0,
 					askConfirm: false,
 					accountsLength: 2
 				},
