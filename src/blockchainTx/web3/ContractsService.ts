@@ -141,7 +141,6 @@ export class ContractsService {
             uri: '',
         };
 
-        console.log(newUser.userAddressSignature);
         this.ecosystemContract.methods.createNewCentralizedUser(
             this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature),
             [ attestation_1.claimType, attestation_2.claimType ],

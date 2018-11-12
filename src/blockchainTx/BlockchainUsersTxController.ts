@@ -11,27 +11,27 @@ export class BlockchainUsersTxController {
   constructor(private readonly appService: BlockchainUsersTxService) {}
 
     @Post('blockchain-user')
-    async createBlockchainUser(@Body() newUserDto: BlockchainUserDto) {
-        return this.appService.createUser(newUserDto);
+    async createBlockchainUser(@Body() newUserDto: BlockchainUserDto, @Req() request: any) {
+        return this.appService.createUser(newUserDto, request);
     }
 
     @Post('blockchain-centralized-user')
-    async createBlockchainCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto) {
-        return this.appService.createCentralizedUser(newUserDto);
+    async createBlockchainCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto, @Req() request: any) {
+        return this.appService.createCentralizedUser(newUserDto, request);
     }
 
     @Post('remove-user')
-    async removeUser(@Body() svandisDataDto: UserRemovalDto) {
-        return this.appService.removeUser(svandisDataDto);
+    async removeUser(@Body() svandisDataDto: UserRemovalDto, @Req() request: any) {
+        return this.appService.removeUser(svandisDataDto, request);
     }
 
     @Post('swap-centralized-recovery')
-    async swapCentralizedRecoveryMethod(@Body() swapRecovery: SwapRecoveryCentralizedDto) {
-        return this.appService.swapCentralizedUserRecovery(swapRecovery);
+    async swapCentralizedRecoveryMethod(@Body() swapRecovery: SwapRecoveryCentralizedDto, @Req() request: any) {
+        return this.appService.swapCentralizedUserRecovery(swapRecovery, request);
     }
 
     @Post('add-new-recovery')
-    async addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraRecoveryCentralizedDto) {
-        return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery);
+    async addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraRecoveryCentralizedDto, @Req() request: any) {
+        return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery, request);
     }
 }
