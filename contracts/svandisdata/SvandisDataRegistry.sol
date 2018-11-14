@@ -1,7 +1,6 @@
+pragma solidity ^0.4.24;
 
-pragma solidity ^0.4.23;
-
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../ownership/Ownable.sol';
 import './SvandisData.sol';
 import './screeners/IcoScreener.sol';
 import './screeners/TokenScreener.sol';

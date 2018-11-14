@@ -1,6 +1,6 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../ownership/Ownable.sol';
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 

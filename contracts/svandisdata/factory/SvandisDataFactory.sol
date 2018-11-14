@@ -1,8 +1,8 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import '../screeners/IcoScreener.sol';
 import '../screeners/TokenScreener.sol';
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../../ownership/Ownable.sol';
 
 contract SvandisDataFactory is Ownable {
     function newTokenScreener(address _owner, string memory _name, bytes32 _ticker, string memory _website, bytes memory _dataLoad) public onlyOwner

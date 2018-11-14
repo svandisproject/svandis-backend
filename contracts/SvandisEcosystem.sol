@@ -1,9 +1,9 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 import './token/SvandisToken.sol';
 import './svandisdata/SvandisDataRegistry.sol';
 import './identity/UserRegistry.sol';
 import './identity/ClaimHolderPresigned.sol';
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import './ownership/Ownable.sol';
 
 //Svandis Ecosystem - Backend Smart Contract protocol for Decentralized Identities and Data Publication
 //This Smart Contract lives at https://github.com/svandisproject/svandis-backend
