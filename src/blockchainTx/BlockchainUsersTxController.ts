@@ -1,37 +1,61 @@
 import {Controller, Get, Post, Body, Req, Res, Param, ValidationPipe} from '@nestjs/common';
-import { BlockchainUsersTxService } from './BlockchainUsersTxService';
+import {BlockchainUsersTxService} from './BlockchainUsersTxService';
 import {BlockchainUserDto} from './data_models/BlockchainUserDto';
 import {CentralizedBlockchainUserDto} from './data_models/CentralizedBlockchainUserDto';
 import {UserRemovalDto} from './data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from './data_models/SwapRecoveryCentralizedDto';
 import {AddExtraRecoveryCentralizedDto} from './data_models/AddExtraRecoveryCentralizedDto';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Controller()
 export class BlockchainUsersTxController {
-  constructor(private readonly appService: BlockchainUsersTxService) {}
+    constructor(private readonly appService: BlockchainUsersTxService) {
+    }
 
     @Post('blockchain-user')
-    async createBlockchainUser(@Body() newUserDto: BlockchainUserDto, @Req() request: any) {
-        return this.appService.createUser(newUserDto, request);
+    createBlockchainUser(@Body() newUserDto: BlockchainUserDto, @Req() request: any): Observable<{ message: string }> {
+        return this.appService.createUser(newUserDto, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
     }
 
     @Post('blockchain-centralized-user')
-    async createBlockchainCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto, @Req() request: any) {
-        return this.appService.createCentralizedUser(newUserDto, request);
+    createBlockchainCentralizedUser(@Body() newUserDto: CentralizedBlockchainUserDto, @Req() request: any): Observable<{ message: string }> {
+        return this.appService.createCentralizedUser(newUserDto, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
     }
 
     @Post('remove-user')
-    async removeUser(@Body() svandisDataDto: UserRemovalDto, @Req() request: any) {
-        return this.appService.removeUser(svandisDataDto, request);
+    removeUser(@Body() svandisDataDto: UserRemovalDto, @Req() request: any): Observable<{ message: string }> {
+        return this.appService.removeUser(svandisDataDto, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
     }
 
     @Post('swap-centralized-recovery')
-    async swapCentralizedRecoveryMethod(@Body() swapRecovery: SwapRecoveryCentralizedDto, @Req() request: any) {
-        return this.appService.swapCentralizedUserRecovery(swapRecovery, request);
+    swapCentralizedRecoveryMethod(@Body() swapRecovery: SwapRecoveryCentralizedDto, @Req() request: any): Observable<{ message: string }> {
+        return this.appService.swapCentralizedUserRecovery(swapRecovery, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
     }
 
     @Post('add-new-recovery')
-    async addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraRecoveryCentralizedDto, @Req() request: any) {
-        return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery, request);
+    addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraRecoveryCentralizedDto,
+                                                 @Req() request: any): Observable<{ message: string }> {
+        return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
     }
 }

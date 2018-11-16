@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import {Global, HttpModule, Module} from '@nestjs/common';
 import { BlockchainUsersTxController } from './BlockchainUsersTxController';
 import { BlockchainScreenersTxController } from './BlockchainScreenersTxController';
 import { BlockchainUsersTxService } from './BlockchainUsersTxService';
@@ -7,7 +7,7 @@ import {BlockchainScreenersTxService} from './BlockchainScreenersTxService';
 
 @Global()
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [BlockchainUsersTxController, BlockchainScreenersTxController],
   providers: [BlockchainUsersTxService, BlockchainScreenersTxService, ContractsService],
 })
