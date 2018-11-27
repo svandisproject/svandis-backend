@@ -143,4 +143,8 @@ contract SvandisEcosystem is Ownable{
         usersRegistry.addExtraUserAccount(_originalAddress, _extraUserAddress);
         return true;
     }
+
+    // TODO drop centralized User key and to convert centralized users to decentralized expert users
+
+    // TODO options for expert users that can be interacted with through local web3
 }

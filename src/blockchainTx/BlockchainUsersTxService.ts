@@ -20,6 +20,9 @@ export class BlockchainUsersTxService {
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
                     this.contractsService.createNewUser(createUserDto);
+                    // Add is onboarded to the user profile on api
+                    // Add is Centralized = false on user profile on api
+                    // Update user identity contract address, user local address
                     return 'Created new expert blockchain user';
                 }
                 else {
@@ -34,6 +37,9 @@ export class BlockchainUsersTxService {
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
                     this.contractsService.createNewCentralizedUser(createUserDto);
+                    // Add is onboarded to the user profile on api
+                    // Add is Centralized = true on user profile on api
+                    // Update user identity contract address, user local address
                     return 'Created new centralized blockchain user';
                 }
                 else {
@@ -48,6 +54,10 @@ export class BlockchainUsersTxService {
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
                     this.contractsService.removeUser(removeUserDto);
+                    // This will not remove a users account with svandis
+                    // Calling this the user should locally remove their key, and be prompted with password to make this change
+                    // Removing user will remove access to their onchain reputation level, and is not recommended
+                    // User should be set to isonboarded = false on api and centralized = true, all other blockchain fields wiped
                     return 'Removed User';
                 }
                 else {
@@ -62,6 +72,7 @@ export class BlockchainUsersTxService {
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
                     this.contractsService.swapCentralizedUserRecovery(swapRecoveryCentralized);
+                    // Update recovery key on USER api
                     return 'Swapped centralized user';
                 }
                 else {
@@ -76,6 +87,7 @@ export class BlockchainUsersTxService {
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
                     this.contractsService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery);
+                    // Add more account keys on USER api
                     return 'Extra key added for centralized user';
                 }
                 else {
