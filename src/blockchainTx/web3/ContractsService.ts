@@ -12,7 +12,8 @@ import {CentralizedBlockchainUserDto} from '../data_models/CentralizedBlockchain
 import {UpdateScreenerDto} from '../data_models/UpdateScreenerDto';
 import {UserRemovalDto} from '../data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from '../data_models/SwapRecoveryCentralizedDto';
-import {AddExtraRecoveryCentralizedDto} from '../data_models/AddExtraRecoveryCentralizedDto';
+import {AddExtraKeyCentralizedDto} from '../data_models/AddExtraKeyCentralizedDto';
+import {ConvertBeginnerToExpertDto} from "../data_models/ConvertBeginnerToExpertDto";
 
 @Injectable()
 export class ContractsService {
@@ -20,6 +21,7 @@ export class ContractsService {
     public account: any;
     private ecosystemContract: any;
     private readonly SIGN_NEW_USER = 'CREATE NEW ACCOUNT';
+    private readonly SIGN_DECENTRALIZED = 'CONVERT DECENTRALIZED';
 
     constructor() {
         const hd = new HDWalletProvider(config.mnemonic, config.rpc);
@@ -197,7 +199,7 @@ export class ContractsService {
     public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto) {
         this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts(
             user.currentAddress,
-            user.newRecoveryAddress).send({from: config.ownerAddress,
+            user.newAddress).send({from: config.ownerAddress,
             gas: 2000000,
             gasPrice: '1'})
             .then(function(receipt){
@@ -205,9 +207,19 @@ export class ContractsService {
             });
     }
 
-    public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraRecoveryCentralizedDto) {
+    public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraKeyCentralizedDto) {
         this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts(
-            user.currentAddress, user.newRecoveryMethod).send({from: config.ownerAddress,
+            user.currentAddress, user.newKeyAddress).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+    }
+
+    public convertBeginnerToExpert(user: ConvertBeginnerToExpertDto) {
+        this.ecosystemContract.methods.swapSvandisKeyForRecoveryConvertCentralizedUserAccounts(
+            this.web3.eth.accounts.recover(this.SIGN_DECENTRALIZED, user.currentAddress), user.newRecoveryAddress).send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
             .then(function(receipt){

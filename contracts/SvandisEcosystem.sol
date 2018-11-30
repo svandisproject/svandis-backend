@@ -146,5 +146,13 @@ contract SvandisEcosystem is Ownable{
 
     // TODO drop centralized User key and to convert centralized users to decentralized expert users
 
+    //Only for accounts with svandis as recovery mechanism
+    function swapSvandisKeyForRecoveryConvertCentralizedUserAccounts(address _userAddress, address _newRecoveryAddress) public onlyOwner returns (bool){
+        address identity = getIdentityFromRegistry(_userAddress);
+        ClaimHolderPresigned identityKeyHolder = ClaimHolderPresigned(identity);
+        identityKeyHolder.removeKey(keccak256(abi.encodePacked(this)));
+        identityKeyHolder.addKey(keccak256(abi.encodePacked(_newRecoveryAddress)), 1, 1);
+        return true;
+    }
     // TODO options for expert users that can be interacted with through local web3
 }

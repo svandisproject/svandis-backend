@@ -4,11 +4,12 @@ import {ContractsService} from './web3/ContractsService';
 import {CentralizedBlockchainUserDto} from './data_models/CentralizedBlockchainUserDto';
 import {UserRemovalDto} from './data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from './data_models/SwapRecoveryCentralizedDto';
-import {AddExtraRecoveryCentralizedDto} from './data_models/AddExtraRecoveryCentralizedDto';
+import {AddExtraKeyCentralizedDto} from './data_models/AddExtraKeyCentralizedDto';
 import {SvandisApi} from './config/SvandisApi';
 import {Observable} from 'rxjs';
 import {AxiosResponse} from 'axios';
 import {map} from 'rxjs/operators';
+import {ConvertBeginnerToExpertDto} from "./data_models/ConvertBeginnerToExpertDto";
 
 @Injectable()
 export class BlockchainUsersTxService {
@@ -82,7 +83,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery: AddExtraRecoveryCentralizedDto, request: any): Observable<string> {
+    addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery: AddExtraKeyCentralizedDto, request: any): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -92,6 +93,21 @@ export class BlockchainUsersTxService {
                 }
                 else {
                     return 'Error, user key could not be added due to authentication issues';
+                }
+            }),
+        );
+    }
+
+    convertBeginnerToExpertAccounts(convertBeginner: ConvertBeginnerToExpertDto, request: any): Observable<string> {
+        return this.isValidUser(request).pipe(
+            map((response: AxiosResponse<boolean>) => {
+                if (response.data) {
+                    this.contractsService.convertBeginnerToExpert(convertBeginner);
+                    // Add more account keys on USER api
+                    return 'Converted Centralized user, gave up key to account';
+                }
+                else {
+                    return 'Error, user could not be converted due to authentication issues';
                 }
             }),
         );

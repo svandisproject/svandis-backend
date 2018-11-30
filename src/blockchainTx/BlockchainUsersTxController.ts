@@ -4,9 +4,10 @@ import {BlockchainUserDto} from './data_models/BlockchainUserDto';
 import {CentralizedBlockchainUserDto} from './data_models/CentralizedBlockchainUserDto';
 import {UserRemovalDto} from './data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from './data_models/SwapRecoveryCentralizedDto';
-import {AddExtraRecoveryCentralizedDto} from './data_models/AddExtraRecoveryCentralizedDto';
+import {AddExtraKeyCentralizedDto} from './data_models/AddExtraKeyCentralizedDto';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ConvertBeginnerToExpertDto} from "./data_models/ConvertBeginnerToExpertDto";
 
 @Controller()
 export class BlockchainUsersTxController {
@@ -50,9 +51,19 @@ export class BlockchainUsersTxController {
     }
 
     @Post('add-new-recovery')
-    addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraRecoveryCentralizedDto,
+    addExtraKeyForSvandisCentralizedUserAccounts(@Body() addExtraRecovery: AddExtraKeyCentralizedDto,
                                                  @Req() request: any): Observable<{ message: string }> {
         return this.appService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery, request)
+            .pipe(
+                map((res) => {
+                    return {message: res};
+                }));
+    }
+
+    @Post('convert-beginner')
+    convertBeginnerAccount(@Body() convertBeginner: ConvertBeginnerToExpertDto,
+                           @Req() request: any): Observable<{ message: string }> {
+        return this.appService.convertBeginnerToExpertAccounts(convertBeginner, request)
             .pipe(
                 map((res) => {
                     return {message: res};
