@@ -13,7 +13,8 @@ import {UpdateScreenerDto} from '../data_models/UpdateScreenerDto';
 import {UserRemovalDto} from '../data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from '../data_models/SwapRecoveryCentralizedDto';
 import {AddExtraKeyCentralizedDto} from '../data_models/AddExtraKeyCentralizedDto';
-import {ConvertBeginnerToExpertDto} from "../data_models/ConvertBeginnerToExpertDto";
+import {ConvertBeginnerToExpertDto} from '../data_models/ConvertBeginnerToExpertDto';
+import {UserHttpService} from '../UserHttpService';
 
 @Injectable()
 export class ContractsService {
@@ -23,7 +24,7 @@ export class ContractsService {
     private readonly SIGN_NEW_USER = 'CREATE NEW ACCOUNT';
     private readonly SIGN_DECENTRALIZED = 'CONVERT DECENTRALIZED';
 
-    constructor() {
+    constructor(private userHttpService: UserHttpService) {
         const hd = new HDWalletProvider(config.mnemonic, config.rpc);
         this.web3 = new Web3(hd);
         this.ecosystemContract = new this.web3.eth.Contract(EcosystemAbi.abi, config.ecosystemAddress);
@@ -66,7 +67,7 @@ export class ContractsService {
         });
     }
 
-    async createNewUser(newUser: BlockchainUserDto) {
+    async createNewUser(newUser: BlockchainUserDto, request: any) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -109,9 +110,18 @@ export class ContractsService {
             .then(function(receipt){
                 console.log(receipt);
             });
+        this.userHttpService.getCurrentUser(request).subscribe(user => {
+            const updatedUser = user;
+            updatedUser.onboarded = true;
+            updatedUser.centralized = false;
+            updatedUser.identity_address = predictAddress;
+            updatedUser.key_addresses = [this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature)];
+            updatedUser.recovery_addresses = [newUser.recoveryAddress];
+            this.userHttpService.putCurrentUser(request, updatedUser, updatedUser.id).subscribe(response => console.log(response));
+        });
     }
 
-    async createNewCentralizedUser(newUser: CentralizedBlockchainUserDto) {
+    async createNewCentralizedUser(newUser: CentralizedBlockchainUserDto, request: any) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -155,6 +165,16 @@ export class ContractsService {
             .then(function(receipt){
                 console.log(receipt);
             });
+
+        this.userHttpService.getCurrentUser(request).subscribe(user => {
+            const updatedUser = user;
+            updatedUser.onboarded = true;
+            updatedUser.centralized = true;
+            updatedUser.identity_address = predictAddress;
+            updatedUser.key_addresses = [this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature)];
+            updatedUser.recovery_addresses = [config.ecosystemAddress];
+            this.userHttpService.putCurrentUser(request, updatedUser, updatedUser.id).subscribe(response => console.log(response));
+        });
     }
 
     async predictIdentityAddress(wallet) {

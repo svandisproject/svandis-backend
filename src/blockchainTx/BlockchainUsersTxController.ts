@@ -7,7 +7,7 @@ import {SwapRecoveryCentralizedDto} from './data_models/SwapRecoveryCentralizedD
 import {AddExtraKeyCentralizedDto} from './data_models/AddExtraKeyCentralizedDto';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ConvertBeginnerToExpertDto} from "./data_models/ConvertBeginnerToExpertDto";
+import {ConvertBeginnerToExpertDto} from './data_models/ConvertBeginnerToExpertDto';
 
 @Controller()
 export class BlockchainUsersTxController {

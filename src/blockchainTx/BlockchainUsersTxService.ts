@@ -9,7 +9,7 @@ import {SvandisApi} from './config/SvandisApi';
 import {Observable} from 'rxjs';
 import {AxiosResponse} from 'axios';
 import {map} from 'rxjs/operators';
-import {ConvertBeginnerToExpertDto} from "./data_models/ConvertBeginnerToExpertDto";
+import {ConvertBeginnerToExpertDto} from './data_models/ConvertBeginnerToExpertDto';
 
 @Injectable()
 export class BlockchainUsersTxService {
@@ -20,7 +20,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.createNewUser(createUserDto);
+                    this.contractsService.createNewUser(createUserDto, request);
                     // Add is onboarded to the user profile on api
                     // Add is Centralized = false on user profile on api
                     // Update user identity contract address, user local address
@@ -37,7 +37,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.createNewCentralizedUser(createUserDto);
+                    this.contractsService.createNewCentralizedUser(createUserDto, request);
                     // Add is onboarded to the user profile on api
                     // Add is Centralized = true on user profile on api
                     // Update user identity contract address, user local address
