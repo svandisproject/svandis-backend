@@ -55,7 +55,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.removeUser(removeUserDto);
+                    this.contractsService.removeUser(removeUserDto, request);
                     // This will not remove a users account with svandis
                     // Calling this the user should locally remove their key, and be prompted with password to make this change
                     // Removing user will remove access to their onchain reputation level, and is not recommended
@@ -73,7 +73,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.swapCentralizedUserRecovery(swapRecoveryCentralized);
+                    this.contractsService.swapCentralizedUserRecovery(swapRecoveryCentralized, request);
                     // Update recovery key on USER api
                     return 'Swapped centralized user';
                 }
@@ -88,7 +88,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery);
+                    this.contractsService.addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery, request);
                     // Add more account keys on USER api
                     return 'Extra key added for centralized user';
                 }
@@ -103,7 +103,7 @@ export class BlockchainUsersTxService {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    this.contractsService.convertBeginnerToExpert(convertBeginner);
+                    this.contractsService.convertBeginnerToExpert(convertBeginner, request);
                     // Add more account keys on USER api
                     return 'Converted Centralized user, gave up key to account';
                 }
