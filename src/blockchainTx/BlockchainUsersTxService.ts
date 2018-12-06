@@ -9,6 +9,7 @@ import {SvandisApi} from './config/SvandisApi';
 import {Observable} from 'rxjs';
 import {AxiosResponse} from 'axios';
 import {map} from 'rxjs/operators';
+import {Request} from 'express';
 import {ConvertBeginnerToExpertDto} from './data_models/ConvertBeginnerToExpertDto';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class BlockchainUsersTxService {
     constructor(private contractsService: ContractsService, private httpService: HttpService) {
     }
 
-    createUser(createUserDto: BlockchainUserDto, request: any): Observable<string> {
+    createUser(createUserDto: BlockchainUserDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -33,7 +34,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    createCentralizedUser(createUserDto: CentralizedBlockchainUserDto, request: any): Observable<string> {
+    createCentralizedUser(createUserDto: CentralizedBlockchainUserDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -50,7 +51,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    removeUser(removeUserDto: UserRemovalDto, request: any): Observable<string> {
+    removeUser(removeUserDto: UserRemovalDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -68,7 +69,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    swapCentralizedUserRecovery(swapRecoveryCentralized: SwapRecoveryCentralizedDto, request: any): Observable<string> {
+    swapCentralizedUserRecovery(swapRecoveryCentralized: SwapRecoveryCentralizedDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -83,7 +84,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery: AddExtraKeyCentralizedDto, request: any): Observable<string> {
+    addExtraKeyForSvandisCentralizedUserAccounts(addExtraRecovery: AddExtraKeyCentralizedDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -98,7 +99,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    convertBeginnerToExpertAccounts(convertBeginner: ConvertBeginnerToExpertDto, request: any): Observable<string> {
+    convertBeginnerToExpertAccounts(convertBeginner: ConvertBeginnerToExpertDto, request: Request): Observable<string> {
         return this.isValidUser(request).pipe(
             map((response: AxiosResponse<boolean>) => {
                 if (response.data) {
@@ -113,7 +114,7 @@ export class BlockchainUsersTxService {
         );
     }
 
-    isValidUser(request: any): Observable<AxiosResponse<boolean>> {
+    isValidUser(request: Request): Observable<AxiosResponse<boolean>> {
         const authJWT = request.headers.authorization;
         const URL = SvandisApi.API_URL + '/user/check';
         return this.httpService.get(URL, {headers: {Authorization: authJWT}});

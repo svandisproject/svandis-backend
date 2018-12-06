@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {User} from './api/User';
 import {map, switchMap} from 'rxjs/operators';
 import {AxiosResponse} from 'axios';
+import {Request} from 'express';
 
 @Injectable()
 export class UserHttpService {
@@ -13,7 +14,7 @@ export class UserHttpService {
     constructor(private httpService: HttpService) {
     }
 
-    public getCurrentUser(userRequest: any): Observable<User> {
+    public getCurrentUser(userRequest: Request): Observable<User> {
         return this.getUser(userRequest)
             .pipe(
                 map(apiUser => {
@@ -23,14 +24,14 @@ export class UserHttpService {
                 }));
     }
 
-    public getUser(userRequest: any): Observable<AxiosResponse<User>> {
+    public getUser(userRequest: Request): Observable<AxiosResponse<User>> {
         const authJWT = userRequest.headers.authorization;
         return this.httpService.get(this.USER_ME_URL, {headers: {Authorization: authJWT}});
     }
 
-    public putCurrentUser(userRequest: any, userRequestBody: any, id: string): Observable<any>{
+    public putCurrentUser(userRequest: Request, userRequestBody: string, id: string): Observable<any>{
         const authJWT = userRequest.headers.authorization;
-        return this.httpService.put(this.USER_URL + id, userRequestBody, {headers: {Authorization: authJWT}});
+        return this.httpService.put(this.USER_URL + id, userRequestBody, {headers: {'Authorization': authJWT, 'Content-Type': 'application/json'}});
     }
 
 }
