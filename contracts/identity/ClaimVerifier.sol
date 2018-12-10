@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -40,25 +40,25 @@ contract ClaimVerifier {
     bytes memory data;
 
     // Construct claimId (identifier + claim type)
-    bytes32 claimId = keccak256(trustedClaimHolder, claimType);
+    bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, claimType));
 
     // Fetch claim from user
     ( foundClaimType, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
 
-    bytes32 dataHash = keccak256(_identity, claimType, data);
-    bytes32 prefixedHash = keccak256("\x19Ethereum Signed Message:\n32", dataHash);
+    bytes32 dataHash = keccak256(abi.encodePacked(_identity, claimType, data));
+    bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));
 
     // Recover address of data signer
     address recovered = getRecoveredAddress(sig, prefixedHash);
 
     // Take hash of recovered address
-    bytes32 hashedAddr = keccak256(recovered);
+    bytes32 hashedAddr = keccak256(abi.encodePacked(recovered));
 
     // Does the trusted identifier have they key which signed the user's claim?
     return trustedClaimHolder.keyHasPurpose(hashedAddr, 3);
   }
 
-  function getRecoveredAddress(bytes sig, bytes32 dataHash)
+  function getRecoveredAddress(bytes memory sig, bytes32 dataHash)
       public
       pure
       returns (address addr)

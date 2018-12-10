@@ -30,7 +30,7 @@ contract('SvandisDataFactory', function ([owner, unknown]) {
 	});
 
 	it('should create a token screener', async function () {
-		await svandisDataFactory.createTokenScreener(
+		await svandisDataFactory.newTokenScreener(
 			svandisDataFactory.address,
 			name,
 			ticker,
@@ -41,7 +41,7 @@ contract('SvandisDataFactory', function ([owner, unknown]) {
 
 
 	it('should create an ico screener', async function () {
-		await svandisDataFactory.createIcoScreener(
+		await svandisDataFactory.newIcoScreener(
 			svandisDataFactory.address,
 			name,
 			ticker,

@@ -1,12 +1,13 @@
 {
   "name": "rc-smart-contracts",
   "version": "0.0.0",
+  "engines": { "node": "8.9.4" },
   "description": "Research Community Smart Contracts",
   "author": "Svandis.io Organization",
   "license": "MIT",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start": "cd contracts && truffle compile && cd ../ && ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "prestart:prod": "rimraf dist && tsc",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
+    "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
     "bip39": "^2.5.0",

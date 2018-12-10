@@ -1,9 +1,9 @@
 import { IsString, IsInt } from 'class-validator';
 
-export class AddExtraRecoveryCentralizedDto {
+export class ConvertBeginnerToExpertDto {
     @IsString()
     readonly currentAddress: string;
 
     @IsString()
-    readonly newRecoveryMethod: string;
+    readonly newRecoveryAddress: string;
 }

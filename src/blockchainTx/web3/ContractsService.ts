@@ -12,7 +12,10 @@ import {CentralizedBlockchainUserDto} from '../data_models/CentralizedBlockchain
 import {UpdateScreenerDto} from '../data_models/UpdateScreenerDto';
 import {UserRemovalDto} from '../data_models/UserRemovalDto';
 import {SwapRecoveryCentralizedDto} from '../data_models/SwapRecoveryCentralizedDto';
-import {AddExtraRecoveryCentralizedDto} from '../data_models/AddExtraRecoveryCentralizedDto';
+import {AddExtraKeyCentralizedDto} from '../data_models/AddExtraKeyCentralizedDto';
+import {ConvertBeginnerToExpertDto} from '../data_models/ConvertBeginnerToExpertDto';
+import {UserHttpService} from '../UserHttpService';
+import {Request} from 'express';
 
 @Injectable()
 export class ContractsService {
@@ -20,8 +23,11 @@ export class ContractsService {
     public account: any;
     private ecosystemContract: any;
     private readonly SIGN_NEW_USER = 'CREATE NEW ACCOUNT';
+    private readonly SIGN_DECENTRALIZATION = 'CONVERT DECENTRALIZED';
+    private readonly SIGN_NEW_DEVICE = 'SIGN NEW DEVICE';
+    private readonly SIGN_SWAP_DEVICE = 'SWAP NEW DEVICE';
 
-    constructor() {
+    constructor(private userHttpService: UserHttpService) {
         const hd = new HDWalletProvider(config.mnemonic, config.rpc);
         this.web3 = new Web3(hd);
         this.ecosystemContract = new this.web3.eth.Contract(EcosystemAbi.abi, config.ecosystemAddress);
@@ -64,7 +70,7 @@ export class ContractsService {
         });
     }
 
-    async createNewUser(newUser: BlockchainUserDto) {
+    async createNewUser(newUser: BlockchainUserDto, request: Request) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -107,9 +113,19 @@ export class ContractsService {
             .then(function(receipt){
                 console.log(receipt);
             });
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const userArray = {
+                onboarded : true,
+                centralized : false,
+                identity_address : predictAddress,
+                key_addresses: [this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature)],
+                recovery_addresses: [newUser.recoveryAddress]};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
     }
 
-    async createNewCentralizedUser(newUser: CentralizedBlockchainUserDto) {
+    async createNewCentralizedUser(newUser: CentralizedBlockchainUserDto, request: Request) {
         const data_text_1 = 'Verified Social';
         const data_text_2 = 'Verified Kyc';
         const dataHash_1 = Web3.utils.asciiToHex(data_text_1);
@@ -141,7 +157,6 @@ export class ContractsService {
             uri: '',
         };
 
-        console.log(newUser.userAddressSignature);
         this.ecosystemContract.methods.createNewCentralizedUser(
             this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature),
             [ attestation_1.claimType, attestation_2.claimType ],
@@ -154,6 +169,17 @@ export class ContractsService {
             .then(function(receipt){
                 console.log(receipt);
             });
+
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const userArray = {
+                onboarded : true,
+                centralized : true,
+                identity_address : predictAddress,
+                key_addresses: [this.web3.eth.accounts.recover(this.SIGN_NEW_USER, newUser.userAddressSignature)],
+                recovery_addresses: [config.ecosystemAddress]};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
     }
 
     async predictIdentityAddress(wallet) {
@@ -185,7 +211,7 @@ export class ContractsService {
             });
     }
 
-    public removeUser(user: UserRemovalDto) {
+    public removeUser(user: UserRemovalDto, request: Request) {
         this.ecosystemContract.methods.removeUser(
             user.userAddressForRemoval).send({from: config.ownerAddress,
             gas: 1000000,
@@ -193,26 +219,66 @@ export class ContractsService {
             .then(function(receipt){
                 console.log(receipt);
             });
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const userArray = {
+                onboarded : false,
+                centralized : true,
+                identity_address : '',
+                key_addresses: '',
+                recovery_addresses: ''};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
     }
 
-    public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto) {
+    public swapCentralizedUserRecovery(user: SwapRecoveryCentralizedDto, request: Request) {
         this.ecosystemContract.methods.swapMainKeyForSvandisCentralizedUserAccounts(
             user.currentAddress,
-            user.newRecoveryAddress).send({from: config.ownerAddress,
+            user.newAddress).send({from: config.ownerAddress,
             gas: 2000000,
             gasPrice: '1'})
             .then(function(receipt){
                 console.log(receipt);
             });
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const userArray = {
+                key_addresses: [this.web3.eth.accounts.recover(this.SIGN_SWAP_DEVICE, user.newAddress)]};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
     }
 
-    public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraRecoveryCentralizedDto) {
+    public addExtraKeyForSvandisCentralizedUserAccounts(user: AddExtraKeyCentralizedDto, request: Request) {
         this.ecosystemContract.methods.addExtraKeyForSvandisCentralizedUserAccounts(
-            user.currentAddress, user.newRecoveryMethod).send({from: config.ownerAddress,
+            user.currentAddress, user.newKeyAddress).send({from: config.ownerAddress,
             gas: 3000000,
             gasPrice: '1'})
             .then(function(receipt){
                 console.log(receipt);
             });
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const addresses = userIndex.key_addresses;
+            addresses.push(this.web3.eth.accounts.recover(this.SIGN_NEW_DEVICE, user.newKeyAddress));
+            const userArray = {
+                key_addresses: addresses};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
+    }
+
+    public convertBeginnerToExpert(user: ConvertBeginnerToExpertDto, request: Request) {
+        this.ecosystemContract.methods.swapSvandisKeyForRecoveryConvertCentralizedUserAccounts(
+            this.web3.eth.accounts.recover(this.SIGN_DECENTRALIZATION, user.currentAddress), user.newRecoveryAddress).send({from: config.ownerAddress,
+            gas: 3000000,
+            gasPrice: '1'})
+            .then(function(receipt){
+                console.log(receipt);
+            });
+        this.userHttpService.getCurrentUser(request).subscribe(userIndex => {
+            const userArray = {
+                recovery_addresses: [user.newRecoveryAddress]};
+            const myObject = {user: userArray};
+            this.userHttpService.putCurrentUser(request, JSON.stringify(myObject), userIndex.id).subscribe(response => console.log(response));
+        });
     }
 }

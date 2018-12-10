@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -36,7 +36,7 @@ contract KeyHolder is ERC725 {
     function getKeysByPurpose(uint256 _purpose)
         public
         view
-        returns(bytes32[] _keys)
+        returns(bytes32[] memory _keys)
     {
         return KeyHolderLibrary.getKeysByPurpose(keyHolderData, _purpose);
     }
@@ -55,7 +55,7 @@ contract KeyHolder is ERC725 {
         return KeyHolderLibrary.approve(keyHolderData, _id, _approve);
     }
 
-    function execute(address _to, uint256 _value, bytes _data)
+    function execute(address _to, uint256 _value, bytes memory _data)
         public
         returns (uint256 executionId)
     {

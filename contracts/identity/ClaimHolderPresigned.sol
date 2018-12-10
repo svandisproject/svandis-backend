@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -16,11 +16,11 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
         address _newUserAddress,
         address _backupAddress,
         address _userRegistryAddress,
-        uint256[] _claimType,
-        address[] _issuer,
-        bytes _signature,
-        bytes _data,
-        uint256[] _offsets
+        uint256[] memory _claimType,
+        address[] memory _issuer,
+        bytes memory _signature,
+        bytes memory _data,
+        uint256[] memory _offsets
     )
         ClaimHolderRegistered(_newUserAddress, _backupAddress, _userRegistryAddress)
         public

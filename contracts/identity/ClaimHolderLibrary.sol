@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -28,18 +28,18 @@ library ClaimHolderLibrary {
       uint256 _claimType,
       uint256 _scheme,
       address _issuer,
-      bytes _signature,
-      bytes _data,
-      string _uri
+      bytes memory _signature,
+      bytes memory _data,
+      string memory _uri
   )
       public
       returns (bytes32 claimRequestId)
   {
       if (msg.sender != address(this)) {
-        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 3), "Sender does not have management key");
+        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have management key");
       }
 
-      bytes32 claimId = keccak256(_issuer, _claimType);
+      bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimType));
 
       if (_claims.byId[claimId].issuer != _issuer) {
           _claims.byType[_claimType].push(claimId);
@@ -68,11 +68,11 @@ library ClaimHolderLibrary {
   function addClaims(
       KeyHolderLibrary.KeyHolderData storage _keyHolderData,
       Claims storage _claims,
-      uint256[] _claimType,
-      address[] _issuer,
-      bytes _signature,
-      bytes _data,
-      uint256[] _offsets
+      uint256[] memory _claimType,
+      address[] memory _issuer,
+      bytes memory _signature,
+      bytes memory _data,
+      uint256[] memory _offsets
   )
       public
   {
@@ -101,7 +101,7 @@ library ClaimHolderLibrary {
       returns (bool success)
   {
       if (msg.sender != address(this)) {
-        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 1), "Sender does not have management key");
+        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key");
       }
 
       emit ClaimRemoved(
@@ -120,14 +120,14 @@ library ClaimHolderLibrary {
 
   function getClaim(Claims storage _claims, bytes32 _claimId)
       public
-      constant
+      view
       returns(
           uint256 claimType,
           uint256 scheme,
           address issuer,
-          bytes signature,
-          bytes data,
-          string uri
+          bytes memory signature,
+          bytes memory data,
+          string memory uri
       )
   {
       return (
@@ -140,10 +140,10 @@ library ClaimHolderLibrary {
       );
   }
 
-  function getBytes(bytes _str, uint256 _offset, uint256 _length)
+  function getBytes(bytes memory _str, uint256 _offset, uint256 _length)
       internal
       pure
-      returns (bytes)
+      returns (bytes memory)
   {
       bytes memory sig = new bytes(_length);
       uint256 j = 0;

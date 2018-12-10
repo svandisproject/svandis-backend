@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -18,9 +18,9 @@ contract ClaimHolder is KeyHolder, ERC735 {
         uint256 _claimType,
         uint256 _scheme,
         address _issuer,
-        bytes _signature,
-        bytes _data,
-        string _uri
+        bytes memory _signature,
+        bytes memory _data,
+        string memory _uri
     )
         public
         returns (bytes32 claimRequestId)
@@ -38,11 +38,11 @@ contract ClaimHolder is KeyHolder, ERC735 {
     }
 
     function addClaims(
-        uint256[] _claimType,
-        address[] _issuer,
-        bytes _signature,
-        bytes _data,
-        uint256[] _offsets
+        uint256[] memory _claimType,
+        address[] memory _issuer,
+        bytes memory _signature,
+        bytes memory _data,
+        uint256[] memory _offsets
     )
         public
     {
@@ -63,14 +63,14 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     function getClaim(bytes32 _claimId)
         public
-        constant
+        view
         returns(
             uint256 claimType,
             uint256 scheme,
             address issuer,
-            bytes signature,
-            bytes data,
-            string uri
+            bytes memory signature,
+            bytes memory data,
+            string memory uri
         )
     {
         return ClaimHolderLibrary.getClaim(claims, _claimId);
@@ -78,8 +78,8 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     function getClaimIdsByType(uint256 _claimType)
         public
-        constant
-        returns(bytes32[] claimIds)
+        view
+        returns(bytes32[] memory claimIds)
     {
         return claims.byType[_claimType];
     }

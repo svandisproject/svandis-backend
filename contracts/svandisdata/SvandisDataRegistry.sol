@@ -1,7 +1,6 @@
+pragma solidity ^0.4.24;
 
-pragma solidity ^0.4.23;
-
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../ownership/Ownable.sol';
 import './SvandisData.sol';
 import './screeners/IcoScreener.sol';
 import './screeners/TokenScreener.sol';
@@ -29,7 +28,7 @@ contract SvandisDataRegistry is Ownable {
     event Deleted(address indexed owner, address indexed svandisDataLocation);
     event Updated(address indexed owner, address indexed svandisDataLocation);
 
-    function createNewTokenScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad)
+    function createNewTokenScreener(string memory _name, bytes32 _ticker, string memory _website, bytes memory _dataLoad)
     public onlyOwner returns (address newTokenScreener) {
         SvandisDataFactory factory = SvandisDataFactory(svandisDataFactory);
         address tokenScreen = factory.newTokenScreener(address(this), _name, _ticker, _website, _dataLoad);
@@ -39,7 +38,7 @@ contract SvandisDataRegistry is Ownable {
         return tokenScreen;
     }
 
-    function createNewIcoScreener(string _name, bytes32 _ticker, string _website, bytes _dataLoad, uint _tokenGenerationEventTimestamp)
+    function createNewIcoScreener(string memory _name, bytes32 _ticker, string memory _website, bytes memory _dataLoad, uint _tokenGenerationEventTimestamp)
     public onlyOwner returns (address newIcoScreener) {
         SvandisDataFactory factory = SvandisDataFactory(svandisDataFactory);
         address icoScreen = factory.newIcoScreener(address(this), _name, _ticker, _website, _dataLoad, _tokenGenerationEventTimestamp);
@@ -49,7 +48,7 @@ contract SvandisDataRegistry is Ownable {
         return icoScreen;
     }
 
-    function updateSvandisData(address _svandisDataContract, bytes _newDataLoad) public onlyOwner returns (bool) {
+    function updateSvandisData(address _svandisDataContract, bytes memory _newDataLoad) public onlyOwner returns (bool) {
         SvandisData sd = SvandisData(_svandisDataContract);
         sd.updateData(_newDataLoad);
         emit Updated(owner, _svandisDataContract);

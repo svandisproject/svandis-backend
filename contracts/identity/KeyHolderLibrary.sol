@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 //This structure for ERC725/735 implements Origin Protocol Source Code
 //https://github.com/OriginProtocol/origin-js/tree/master/contracts
 
@@ -6,7 +6,7 @@ library KeyHolderLibrary {
   event KeyAdded(bytes32 indexed key, uint256 indexed purpose, uint256 indexed keyType);
   event KeyRemoved(bytes32 indexed key, uint256 indexed purpose, uint256 indexed keyType);
   event ExecutionRequested(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes data);
-  event ExecutionFailed(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes data);
+  event ExecutionFailed(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes  data);
   event Executed(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes data);
   event Approved(uint256 indexed executionId, bool approved);
 
@@ -35,7 +35,7 @@ library KeyHolderLibrary {
       public
   {
       //Adding a purpose 3 key for Svandis
-      bytes32 _keySvandis = keccak256(msg.sender);
+      bytes32 _keySvandis = keccak256(abi.encodePacked(msg.sender));
       _keyHolderData.keys[_keySvandis].key = _keySvandis;
       _keyHolderData.keys[_keySvandis].purpose = 3;
       _keyHolderData.keys[_keySvandis].keyType = 1;
@@ -43,7 +43,7 @@ library KeyHolderLibrary {
       emit KeyAdded(_keySvandis, _keyHolderData.keys[_keySvandis].purpose, 3);
 
       require(_newUser != address(0));
-      bytes32 _key = keccak256(_newUser);
+      bytes32 _key = keccak256(abi.encodePacked(_newUser));
       _keyHolderData.keys[_key].key = _key;
       _keyHolderData.keys[_key].purpose = 1;
       _keyHolderData.keys[_key].keyType = 1;
@@ -52,7 +52,7 @@ library KeyHolderLibrary {
 
       //Either user input backup address or will give higher purpose to svandis address
       require(_backupUser != address(0));
-      bytes32 _keyBackup = keccak256(_backupUser);
+      bytes32 _keyBackup = keccak256(abi.encodePacked(_backupUser));
       _keyHolderData.keys[_keyBackup].key = _keyBackup;
       _keyHolderData.keys[_keyBackup].purpose = 1;
       _keyHolderData.keys[_keyBackup].keyType = 1;
@@ -83,7 +83,7 @@ library KeyHolderLibrary {
   function getKeysByPurpose(KeyHolderData storage _keyHolderData, uint256 _purpose)
       public
       view
-      returns(bytes32[] _keys)
+      returns(bytes32[] memory _keys)
   {
       return _keyHolderData.keysByPurpose[_purpose];
   }
@@ -94,7 +94,7 @@ library KeyHolderLibrary {
   {
       require(_keyHolderData.keys[_key].key != _key, "Key already exists"); // Key should not already exist
       if (msg.sender != address(this)) {
-        require(keyHasPurpose(_keyHolderData, keccak256(msg.sender), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
+        require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
       }
 
       _keyHolderData.keys[_key].key = _key;
@@ -112,7 +112,7 @@ library KeyHolderLibrary {
       public
       returns (bool success)
   {
-      require(keyHasPurpose(_keyHolderData, keccak256(msg.sender), 2), "Sender does not have action key");
+      require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 2), "Sender does not have action key");
 
       emit Approved(_id, _approve);
 
@@ -127,7 +127,7 @@ library KeyHolderLibrary {
                   _keyHolderData.executions[_id].value,
                   _keyHolderData.executions[_id].data
               );
-              return;
+              return true;
           } else {
               emit ExecutionFailed(
                   _id,
@@ -135,7 +135,7 @@ library KeyHolderLibrary {
                   _keyHolderData.executions[_id].value,
                   _keyHolderData.executions[_id].data
               );
-              return;
+              return false;
           }
       } else {
           _keyHolderData.executions[_id].approved = false;
@@ -143,7 +143,7 @@ library KeyHolderLibrary {
       return true;
   }
 
-  function execute(KeyHolderData storage _keyHolderData, address _to, uint256 _value, bytes _data)
+  function execute(KeyHolderData storage _keyHolderData, address _to, uint256 _value, bytes memory _data)
       public
       returns (uint256 executionId)
   {
@@ -154,7 +154,7 @@ library KeyHolderLibrary {
 
       emit ExecutionRequested(_keyHolderData.executionNonce, _to, _value, _data);
 
-      if (keyHasPurpose(_keyHolderData, keccak256(msg.sender),1) || keyHasPurpose(_keyHolderData, keccak256(msg.sender),2)) {
+      if (keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),1) || keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),2)) {
           approve(_keyHolderData, _keyHolderData.executionNonce, true);
       }
 
