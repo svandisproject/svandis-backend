@@ -1,6 +1,7 @@
 {
   "name": "rc-smart-contracts",
   "version": "0.0.0",
+  "engines": { "node": "8.9.4" },
   "description": "Research Community Smart Contracts",
   "author": "Svandis.io Organization",
   "license": "MIT",
